@@ -46,7 +46,7 @@
 #define configUSE_IDLE_HOOK			0
 #define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 8000000 )//crystal
-#define configTICK_RATE_HZ			( ( TickType_t ) 10 )//el tick kol ad eh
+#define configTICK_RATE_HZ			( ( TickType_t ) 4 )//el tick kol ad eh
 #define configMAX_PRIORITIES		( 5 )// akbr rkam priority
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 85 )//asghr 7agm el task eli bt7gzo el TCB ,85 di WORD
 #define configTOTAL_HEAP_SIZE		( (size_t ) ( 1500 ) )// max size of task in bytes

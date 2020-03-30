@@ -20,17 +20,28 @@
 u8 Seconds = 0;
 u8 Minutes = 0;
 u8 Hours = 0;
-
+u8 KPD_Check_frequency = configTICK_RATE_HZ*2;
 SemaphoreHandle_t LCD ;
 xQueueHandle KPD_input = NULL;
+
+void Clock_Print_Default_Interface(void)
+{
+	LCD_Set_Block(hours_position);
+	LCD_Void_Write_Number_2(Hours);
+	LCD_Set_Block(minutes_position-1);
+	LCD_Void_Write_Data(':');
+	LCD_Void_Write_Number_2(Minutes);
+	LCD_Set_Block(seconds_position-1);
+	LCD_Void_Write_Data(':');
+	LCD_Void_Write_Number_2(Seconds);
+
+}
 
 void Clock_Second(void *pvParameters)
 {
 	LCD = xSemaphoreCreateMutex();
 	TickType_t MyLastUnblockS;
 	MyLastUnblockS = xTaskGetTickCount();
-	LCD_Set_Block(seconds_position-1);
-	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -49,8 +60,6 @@ void Clock_Minute(void *pvParameters)
 {
 	TickType_t MyLastUnblockM;
 	MyLastUnblockM = xTaskGetTickCount();
-	LCD_Set_Block(minutes_position-1);
-	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -69,8 +78,6 @@ void Clock_Hours(void *pvParameters)
 {
 	TickType_t MyLastUnblockH;
 	MyLastUnblockH = xTaskGetTickCount();
-	LCD_Set_Block(minutes_position-1);
-	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -108,13 +115,14 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
 	u8 take_lach = 0;
+
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
 		{
 			if((take_lach)&&(pressed != '#'))
 			{
-				LCD_Set_Block(26);
+				LCD_Set_Block(16);
 				LCD_Void_Write_Data(pressed);
 				continue;
 			}
@@ -125,6 +133,7 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 				{
 					LCD_Set_Block(16);
 					LCD_Void_Write_String("taken  ");
+					KPD_Check_frequency = 1;
 					take_lach = 1;
 				}
 				break;
@@ -133,6 +142,8 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 				LCD_Set_Block(16);
 				LCD_Void_Write_String("released");
 				take_lach = 0;
+				Clock_Print_Default_Interface();
+				KPD_Check_frequency = configTICK_RATE_HZ*2;
 				break;
 
 			}
