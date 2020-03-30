@@ -42,6 +42,8 @@ void Clock_Second(void *pvParameters)
 	LCD = xSemaphoreCreateMutex();
 	TickType_t MyLastUnblockS;
 	MyLastUnblockS = xTaskGetTickCount();
+	LCD_Set_Block(seconds_position-1);
+	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -60,6 +62,8 @@ void Clock_Minute(void *pvParameters)
 {
 	TickType_t MyLastUnblockM;
 	MyLastUnblockM = xTaskGetTickCount();
+	LCD_Set_Block(minutes_position-1);
+	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -78,6 +82,8 @@ void Clock_Hours(void *pvParameters)
 {
 	TickType_t MyLastUnblockH;
 	MyLastUnblockH = xTaskGetTickCount();
+	LCD_Set_Block(minutes_position-1);
+	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -115,37 +121,43 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
 	u8 take_lach = 0;
-
+	u8 current_block = 26;
+	u8 take_lcd = 0;
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
 		{
-			if((take_lach)&&(pressed != '#'))
+			if((take_lach)&&(pressed != '*'))
 			{
-				LCD_Set_Block(16);
+				LCD_Set_Block(current_block);
 				LCD_Void_Write_Data(pressed);
 				continue;
 			}
 			switch (pressed)
 			{
 			case '*':
-				if(xSemaphoreTake(LCD,10))
+				if(take_lcd%2)
 				{
+					if(xSemaphoreTake(LCD,10))
+					{
+						LCD_Set_Block(16);
+						LCD_Void_Write_String("taken  ");
+						KPD_Check_frequency = 1;
+						take_lach = 1;
+						take_lcd++;
+					}
+				}
+				else
+				{
+					xSemaphoreGive(LCD);
 					LCD_Set_Block(16);
-					LCD_Void_Write_String("taken  ");
-					KPD_Check_frequency = 1;
-					take_lach = 1;
+					LCD_Void_Write_String("released");
+					take_lach = 0;
+					Clock_Print_Default_Interface();
+					KPD_Check_frequency = configTICK_RATE_HZ*2;
+					take_lcd++;
 				}
 				break;
-			case '#':
-				xSemaphoreGive(LCD);
-				LCD_Set_Block(16);
-				LCD_Void_Write_String("released");
-				take_lach = 0;
-				Clock_Print_Default_Interface();
-				KPD_Check_frequency = configTICK_RATE_HZ*2;
-				break;
-
 			}
 
 		}

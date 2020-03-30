@@ -64,8 +64,6 @@ void LCD_initialize(void)
 	_delay_us(50);
 	LCD_Void_Write_Cmd(0b00000001);
 	_delay_ms(2);
-/*	LCD_Void_Write_CGRAM(Pattern_Alarm,Pixel_Alarm);
-	LCD_Void_Write_CGRAM(Pattern_Arrow,Pixel_Arrow);*/
 
 }
 
@@ -128,13 +126,18 @@ void LCD_Void_Write_Moving_String(u8* copy_string)
 	}
 }
 
-void LCD_Void_Write_CGRAM(const u8 copy_rows[8],u8 copy_CGRAM_address)
+void LCD_Void_Write_CGRAM(u8 copy_row_0,u8 copy_row_1,u8 copy_row_2,u8 copy_row_3,u8 copy_row_4,u8 copy_row_5,u8 copy_row_6,u8 copy_row_7,u8 copy_CGRAM_address)
 {
-	LCD_Void_Write_Cmd(0x40 + copy_CGRAM_address*8);
-	for(int i=0;i<8;i++)
-	{
-		LCD_Void_Write_Data(copy_rows[i]);
-	}
+	LCD_Void_Write_Cmd(copy_CGRAM_address);
+	LCD_Void_Write_Data(copy_row_0);
+	LCD_Void_Write_Data(copy_row_1);
+	LCD_Void_Write_Data(copy_row_2);
+	LCD_Void_Write_Data(copy_row_3);
+	LCD_Void_Write_Data(copy_row_4);
+	LCD_Void_Write_Data(copy_row_5);
+	LCD_Void_Write_Data(copy_row_6);
+	LCD_Void_Write_Data(copy_row_7);
+	LCD_Void_Write_Cmd(0b10000000);
 }
 
 void LCD_Void_Write_Number(u32 Number)

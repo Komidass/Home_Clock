@@ -28,8 +28,8 @@ int main(void)
 	xTaskCreate(Clock_Second,"seconds",150,NULL,1,NULL);
 	xTaskCreate(Clock_Minute,"minutes",150,NULL,1,NULL);
 	xTaskCreate(Clock_Hours,"hours",150,NULL,1,NULL);
-	xTaskCreate(Clock_Check_KPD,"KPD_check",150,NULL,1,NULL);
-	xTaskCreate(Clock_Enter_Typing_Mode,"Enter typing mode",400,NULL,1,NULL);
+	xTaskCreate(Clock_Check_KPD,"KPD_check",150,NULL,2,NULL);
+	xTaskCreate(Clock_Enter_Typing_Mode,"Enter typing mode",300,NULL,2,NULL);
 	vTaskStartScheduler();
 
 	while(1)

@@ -12,7 +12,6 @@
 #define minutes_frequency configTICK_RATE_HZ*60
 #define hours_frequency   configTICK_RATE_HZ*3600
 
-
 #define seconds_position 6
 #define minutes_position 3
 #define hours_position 	 0
