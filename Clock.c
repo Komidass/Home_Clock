@@ -136,15 +136,17 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 			switch (pressed)
 			{
 			case '*':
-				if(take_lcd%2)
+				if((take_lcd%2)==0)
 				{
 					if(xSemaphoreTake(LCD,10))
 					{
 						LCD_Set_Block(16);
 						LCD_Void_Write_String("taken  ");
-						KPD_Check_frequency = 1;
 						take_lach = 1;
+						vTaskDelay(configTICK_RATE_HZ);
 						take_lcd++;
+						KPD_Check_frequency = 1;
+
 					}
 				}
 				else
@@ -155,7 +157,9 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 					take_lach = 0;
 					Clock_Print_Default_Interface();
 					KPD_Check_frequency = configTICK_RATE_HZ*2;
+					vTaskDelay(configTICK_RATE_HZ);
 					take_lcd++;
+
 				}
 				break;
 			}
