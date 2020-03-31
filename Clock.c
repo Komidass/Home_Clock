@@ -120,9 +120,9 @@ void Clock_Check_KPD(void *pvParameters)
 void Clock_Enter_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
-	u8 take_lach = 0;
-	u8 current_block = 16;
-	u8 take_lcd = 0;
+	u8 take_lach = 0;//to latch entering any key other the the LCD taking key if the entering key is not pressed continue the loop
+	u8 current_block = second_row_start;
+	u8 take_lcd = 0;//to latch taking LCD
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
@@ -133,17 +133,27 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 			default:
 				if((take_lach))
 				{
+					/* Set to the current block and clear the last cursor*/
 					LCD_Set_Block(current_block);
 					LCD_Void_Write_Data(' ');
+
+
 					switch (pressed)
 					{
 					case '>':
+						/* if the cursor is going to be on a ':' next time increment it by 1*/
 						if((current_block+1)%3 == 0){
 							LCD_Set_Block(current_block+1);
 							LCD_Void_Write_Data(' ');
 							current_block++;
 						}
 						current_block++;
+						if(current_block == maximum_cursor_range+2) /*if cursor hits maximum range get it back to the beginning*/
+						{
+							current_block = minimum_cursor_range;
+							LCD_Set_Block(current_block);
+
+						}
 						LCD_Void_Write_Data(Up_Arrow);
 						break;
 					case '<':
@@ -153,35 +163,63 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 							current_block--;
 						}
 						current_block--;
+						if(current_block == minimum_cursor_range-2)
+						{
+							current_block = maximum_cursor_range;
+							LCD_Set_Block(current_block);
+
+						}
 						LCD_Set_Block(current_block);
 						LCD_Void_Write_Data(Up_Arrow);
 						break;
 					default:
-
-						if((current_block+1)%3 == 0){
-							LCD_Set_Block(current_block+1);
-							LCD_Void_Write_Data(' ');
-							current_block++;
-						}
-						current_block++;
-						LCD_Void_Write_Data(Up_Arrow);
+						/*change the time according to the user input*/
 						switch (current_block)
 								{
 								case hours_position+16:
 									Hours = ((pressed-'0')*10)+(Hours%10);
 									break;
 								case hours_position+17:
-									Hours = (pressed-'0');
+									Hours = (pressed-'0')+((Hours/10)*10);
+									break;
+								case minutes_position+16:
+									Minutes = ((pressed-'0')*10)+(Minutes%10);
+									break;
+								case minutes_position+17:
+									Minutes = (pressed-'0')+((Minutes/10)*10);
+									break;
+								case seconds_position+16:
+									Seconds = ((pressed-'0')*10)+(Seconds%10);
+									break;
+								case seconds_position+17:
+									Seconds = (pressed-'0')+((Seconds/10)*10);
 									break;
 								}
-						LCD_Set_Block(current_block-16);
+						LCD_Set_Block(current_block-second_row_start);
 						LCD_Void_Write_Data(pressed);
+
+						LCD_Set_Block(current_block+1);
+						if((current_block+1)%3 == 0){
+							LCD_Set_Block(current_block+1);
+							LCD_Void_Write_Data(' ');
+							current_block++;
+						}
+						current_block++;
+						if(current_block == maximum_cursor_range+2)
+						{
+							current_block = minimum_cursor_range;
+							LCD_Set_Block(current_block);
+
+						}
+						LCD_Void_Write_Data(Up_Arrow);
 						break;
 
 					}
-					vTaskDelay(2);
+					vTaskDelay(3);
+
 					continue;
 				}
+
 				break;
 
 
@@ -190,29 +228,24 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 				{
 					if(xSemaphoreTake(LCD,10))
 					{
-						current_block = 16;
-					//	LCD_Void_Write_String("taken  ");
+						current_block = second_row_start; //when taking the LCD set the cursor to the 2nd row
 						take_lach = 1;
-						vTaskDelay(configTICK_RATE_HZ);
 						LCD_Set_Block(current_block);
 						LCD_Void_Write_Data(Up_Arrow);
 						take_lcd++;
-						KPD_Check_frequency = KPD_Check_frequency_Fast;
-						current_block = 16;
-
+						KPD_Check_frequency = KPD_Check_frequency_Fast; // enter fast KPD checking freq
 					}
 				}
 				else
 				{
 					xSemaphoreGive(LCD);
-					LCD_Set_Block(16);
-					//LCD_Void_Write_String("released");
+					LCD_Set_Block(second_row_start);
 					take_lach = 0;
-					Clock_Print_Default_Interface();
-					KPD_Check_frequency = KPD_Check_frequency_Slow;
+					Clock_Print_Default_Interface();//print default interface after giving back the LCD
+					KPD_Check_frequency = KPD_Check_frequency_Slow;//change KPD check freq to slow
 					LCD_Set_Block(current_block);
 					LCD_Void_Write_Data(' ');
-					vTaskDelay(configTICK_RATE_HZ);
+					vTaskDelay(configTICK_RATE_HZ);//to avoid quick taking and giving the LCD
 					take_lcd++;
 
 				}
