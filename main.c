@@ -25,10 +25,10 @@ int main(void)
 	LCD_Void_Clear();
 	Clock_Print_Default_Interface();
 	KBD_u8Initialize(GROUP_B);
-	xTaskCreate(Clock_Second,"seconds",150,NULL,1,NULL);
-	xTaskCreate(Clock_Minute,"minutes",150,NULL,1,NULL);
-	xTaskCreate(Clock_Hours,"hours",150,NULL,1,NULL);
-	xTaskCreate(Clock_Check_KPD,"KPD_check",150,NULL,2,NULL);
+	xTaskCreate(Clock_Second,"seconds",200,NULL,1,NULL);
+	xTaskCreate(Clock_Minute,"minutes",200,NULL,1,NULL);
+	xTaskCreate(Clock_Hours,"hours",200,NULL,1,NULL);
+	xTaskCreate(Clock_Check_KPD,"KPD_check",200,NULL,2,NULL);
 	xTaskCreate(Clock_Enter_Typing_Mode,"Enter typing mode",300,NULL,2,NULL);
 	vTaskStartScheduler();
 

@@ -121,31 +121,84 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
 	u8 take_lach = 0;
-	u8 current_block = 26;
+	u8 current_block = 16;
 	u8 take_lcd = 0;
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
 		{
-			if((take_lach)&&(pressed != '*'))
-			{
-				LCD_Set_Block(current_block);
-				LCD_Void_Write_Data(pressed);
-				continue;
-			}
+
 			switch (pressed)
 			{
+			default:
+				if((take_lach))
+				{
+					LCD_Set_Block(current_block);
+					LCD_Void_Write_Data(' ');
+					switch (pressed)
+					{
+					case '>':
+						if((current_block+1)%3 == 0){
+							LCD_Set_Block(current_block+1);
+							LCD_Void_Write_Data(' ');
+							current_block++;
+						}
+						current_block++;
+						LCD_Void_Write_Data(Up_Arrow);
+						break;
+					case '<':
+						if((current_block-1)%3 == 0){
+							LCD_Set_Block(current_block-1);
+							LCD_Void_Write_Data(' ');
+							current_block--;
+						}
+						current_block--;
+						LCD_Set_Block(current_block);
+						LCD_Void_Write_Data(Up_Arrow);
+						break;
+					default:
+
+						if((current_block+1)%3 == 0){
+							LCD_Set_Block(current_block+1);
+							LCD_Void_Write_Data(' ');
+							current_block++;
+						}
+						current_block++;
+						LCD_Void_Write_Data(Up_Arrow);
+						switch (current_block)
+								{
+								case hours_position+16:
+									Hours = ((pressed-'0')*10)+(Hours%10);
+									break;
+								case hours_position+17:
+									Hours = (pressed-'0');
+									break;
+								}
+						LCD_Set_Block(current_block-16);
+						LCD_Void_Write_Data(pressed);
+						break;
+
+					}
+					vTaskDelay(2);
+					continue;
+				}
+				break;
+
+
 			case '*':
 				if((take_lcd%2)==0)
 				{
 					if(xSemaphoreTake(LCD,10))
 					{
-						LCD_Set_Block(16);
-						LCD_Void_Write_String("taken  ");
+						current_block = 16;
+					//	LCD_Void_Write_String("taken  ");
 						take_lach = 1;
 						vTaskDelay(configTICK_RATE_HZ);
+						LCD_Set_Block(current_block);
+						LCD_Void_Write_Data(Up_Arrow);
 						take_lcd++;
-						KPD_Check_frequency = 1;
+						KPD_Check_frequency = KPD_Check_frequency_Fast;
+						current_block = 16;
 
 					}
 				}
@@ -153,10 +206,12 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 				{
 					xSemaphoreGive(LCD);
 					LCD_Set_Block(16);
-					LCD_Void_Write_String("released");
+					//LCD_Void_Write_String("released");
 					take_lach = 0;
 					Clock_Print_Default_Interface();
-					KPD_Check_frequency = configTICK_RATE_HZ*2;
+					KPD_Check_frequency = KPD_Check_frequency_Slow;
+					LCD_Set_Block(current_block);
+					LCD_Void_Write_Data(' ');
 					vTaskDelay(configTICK_RATE_HZ);
 					take_lcd++;
 

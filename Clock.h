@@ -16,6 +16,9 @@
 #define minutes_position 3
 #define hours_position 	 0
 
+#define KPD_Check_frequency_Slow configTICK_RATE_HZ*2
+#define KPD_Check_frequency_Fast 1
+
 void Clock_Second(void *pvParameters);
 void Clock_Minute(void *pvParameters);
 void Clock_Hours(void *pvParameters);

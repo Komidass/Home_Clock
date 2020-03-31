@@ -168,7 +168,10 @@ void LCD_Void_Write_Number_2(u8 Number)
 
 }
 
-
+void LCD_Void_Write_Number_1(u8 Number)
+{
+	LCD_Void_Write_Data(Number+'0');
+}
 
 
 
