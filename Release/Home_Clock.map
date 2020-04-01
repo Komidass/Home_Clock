@@ -154,7 +154,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x0000000000000000     0x2ffe
+.text           0x0000000000000000     0x301c
  *(.vectors)
  .vectors       0x0000000000000000       0x54 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
                 0x0000000000000000                __vectors
@@ -256,432 +256,432 @@ END GROUP
                 0x0000000000000092                . = ALIGN (0x2)
  *(.text.*)
  .text.Clock_Print_Default_Interface
-                0x0000000000000092       0x36 ./Clock.o
+                0x0000000000000092       0x5e ./Clock.o
                 0x0000000000000092                Clock_Print_Default_Interface
  .text.Clock_Second
-                0x00000000000000c8       0x84 ./Clock.o
-                0x00000000000000c8                Clock_Second
+                0x00000000000000f0       0x78 ./Clock.o
+                0x00000000000000f0                Clock_Second
  .text.Clock_Minute
-                0x000000000000014c       0x76 ./Clock.o
-                0x000000000000014c                Clock_Minute
+                0x0000000000000168       0x76 ./Clock.o
+                0x0000000000000168                Clock_Minute
  .text.Clock_Hours
-                0x00000000000001c2       0x82 ./Clock.o
-                0x00000000000001c2                Clock_Hours
+                0x00000000000001de       0xac ./Clock.o
+                0x00000000000001de                Clock_Hours
  .text.Clock_Check_KPD
-                0x0000000000000244       0x64 ./Clock.o
-                0x0000000000000244                Clock_Check_KPD
+                0x000000000000028a       0x64 ./Clock.o
+                0x000000000000028a                Clock_Check_KPD
  .text.Clock_Enter_Typing_Mode
-                0x00000000000002a8      0x228 ./Clock.o
-                0x00000000000002a8                Clock_Enter_Typing_Mode
+                0x00000000000002ee      0x22a ./Clock.o
+                0x00000000000002ee                Clock_Enter_Typing_Mode
  .text.DIO_voidInitialize
-                0x00000000000004d0        0xa ./DIO_Program.o
-                0x00000000000004d0                DIO_voidInitialize
+                0x0000000000000518        0xa ./DIO_Program.o
+                0x0000000000000518                DIO_voidInitialize
  .text.DIO_u8SetPinDirection
-                0x00000000000004da       0xe2 ./DIO_Program.o
-                0x00000000000004da                DIO_u8SetPinDirection
+                0x0000000000000522       0xe2 ./DIO_Program.o
+                0x0000000000000522                DIO_u8SetPinDirection
  .text.DIO_u8SetPinValue
-                0x00000000000005bc       0xe2 ./DIO_Program.o
-                0x00000000000005bc                DIO_u8SetPinValue
+                0x0000000000000604       0xe2 ./DIO_Program.o
+                0x0000000000000604                DIO_u8SetPinValue
  .text.DIO_u8SetPortDirection
-                0x000000000000069e       0x26 ./DIO_Program.o
-                0x000000000000069e                DIO_u8SetPortDirection
+                0x00000000000006e6       0x26 ./DIO_Program.o
+                0x00000000000006e6                DIO_u8SetPortDirection
  .text.DIO_u8SetPortValue
-                0x00000000000006c4       0x26 ./DIO_Program.o
-                0x00000000000006c4                DIO_u8SetPortValue
+                0x000000000000070c       0x26 ./DIO_Program.o
+                0x000000000000070c                DIO_u8SetPortValue
  .text.DIO_u8GetPinValue
-                0x00000000000006ea       0x42 ./DIO_Program.o
-                0x00000000000006ea                DIO_u8GetPinValue
+                0x0000000000000732       0x42 ./DIO_Program.o
+                0x0000000000000732                DIO_u8GetPinValue
  .text.DIO_u8GetPortValue
-                0x000000000000072c       0x2a ./DIO_Program.o
-                0x000000000000072c                DIO_u8GetPortValue
+                0x0000000000000774       0x2a ./DIO_Program.o
+                0x0000000000000774                DIO_u8GetPortValue
  .text.KBD_u8GetKeyPadState
-                0x0000000000000756       0xbc ./KBD_program.o
-                0x0000000000000756                KBD_u8GetKeyPadState
+                0x000000000000079e       0xbc ./KBD_program.o
+                0x000000000000079e                KBD_u8GetKeyPadState
  .text.KBD_u8Initialize
-                0x0000000000000812      0x172 ./KBD_program.o
-                0x0000000000000812                KBD_u8Initialize
+                0x000000000000085a      0x172 ./KBD_program.o
+                0x000000000000085a                KBD_u8Initialize
  .text.KBD_keys_map
-                0x0000000000000984       0x20 ./KBD_program.o
-                0x0000000000000984                KBD_keys_map
+                0x00000000000009cc       0x20 ./KBD_program.o
+                0x00000000000009cc                KBD_keys_map
  .text.LCD_Void_Write
-                0x00000000000009a4       0x8a ./LCD_program.o
+                0x00000000000009ec       0x8a ./LCD_program.o
  .text.LCD_Void_Write_Cmd
-                0x0000000000000a2e       0x14 ./LCD_program.o
-                0x0000000000000a2e                LCD_Void_Write_Cmd
+                0x0000000000000a76       0x14 ./LCD_program.o
+                0x0000000000000a76                LCD_Void_Write_Cmd
  .text.LCD_Void_Write_Data
-                0x0000000000000a42       0x14 ./LCD_program.o
-                0x0000000000000a42                LCD_Void_Write_Data
- .text.LCD_initialize
-                0x0000000000000a56       0xac ./LCD_program.o
-                0x0000000000000a56                LCD_initialize
+                0x0000000000000a8a       0x14 ./LCD_program.o
+                0x0000000000000a8a                LCD_Void_Write_Data
  .text.LCD_Void_Write_String
-                0x0000000000000b02       0x3e ./LCD_program.o
-                0x0000000000000b02                LCD_Void_Write_String
+                0x0000000000000a9e       0x3e ./LCD_program.o
+                0x0000000000000a9e                LCD_Void_Write_String
  .text.LCD_Void_Clear
-                0x0000000000000b40        0x6 ./LCD_program.o
-                0x0000000000000b40                LCD_Void_Clear
+                0x0000000000000adc        0x6 ./LCD_program.o
+                0x0000000000000adc                LCD_Void_Clear
  .text.LCD_Void_Write_Blinking_String
-                0x0000000000000b46       0x38 ./LCD_program.o
-                0x0000000000000b46                LCD_Void_Write_Blinking_String
+                0x0000000000000ae2       0x38 ./LCD_program.o
+                0x0000000000000ae2                LCD_Void_Write_Blinking_String
  .text.LCD_Set_Block
-                0x0000000000000b7e        0xe ./LCD_program.o
-                0x0000000000000b7e                LCD_Set_Block
+                0x0000000000000b1a        0xe ./LCD_program.o
+                0x0000000000000b1a                LCD_Set_Block
  .text.LCD_Void_Write_Moving_String
-                0x0000000000000b8c       0x4e ./LCD_program.o
-                0x0000000000000b8c                LCD_Void_Write_Moving_String
+                0x0000000000000b28       0x4e ./LCD_program.o
+                0x0000000000000b28                LCD_Void_Write_Moving_String
  .text.LCD_Void_Write_CGRAM
-                0x0000000000000bda       0x74 ./LCD_program.o
-                0x0000000000000bda                LCD_Void_Write_CGRAM
+                0x0000000000000b76       0x38 ./LCD_program.o
+                0x0000000000000b76                LCD_Void_Write_CGRAM
+ .text.LCD_initialize
+                0x0000000000000bae       0xbe ./LCD_program.o
+                0x0000000000000bae                LCD_initialize
  .text.LCD_Void_Write_Number
-                0x0000000000000c4e       0x72 ./LCD_program.o
-                0x0000000000000c4e                LCD_Void_Write_Number
+                0x0000000000000c6c       0x72 ./LCD_program.o
+                0x0000000000000c6c                LCD_Void_Write_Number
  .text.LCD_Void_Write_Number_2
-                0x0000000000000cc0       0x1a ./LCD_program.o
-                0x0000000000000cc0                LCD_Void_Write_Number_2
+                0x0000000000000cde       0x1a ./LCD_program.o
+                0x0000000000000cde                LCD_Void_Write_Number_2
  .text.LCD_Void_Write_Number_1
-                0x0000000000000cda        0x6 ./LCD_program.o
-                0x0000000000000cda                LCD_Void_Write_Number_1
+                0x0000000000000cf8        0x6 ./LCD_program.o
+                0x0000000000000cf8                LCD_Void_Write_Number_1
  .text.xEventGroupCreate
-                0x0000000000000ce0       0x26 ./event_groups.o
-                0x0000000000000ce0                xEventGroupCreate
+                0x0000000000000cfe       0x26 ./event_groups.o
+                0x0000000000000cfe                xEventGroupCreate
  .text.xEventGroupWaitBits
-                0x0000000000000d06       0xf0 ./event_groups.o
-                0x0000000000000d06                xEventGroupWaitBits
+                0x0000000000000d24       0xf0 ./event_groups.o
+                0x0000000000000d24                xEventGroupWaitBits
  .text.xEventGroupClearBits
-                0x0000000000000df6       0x1e ./event_groups.o
-                0x0000000000000df6                xEventGroupClearBits
+                0x0000000000000e14       0x1e ./event_groups.o
+                0x0000000000000e14                xEventGroupClearBits
  .text.xEventGroupGetBitsFromISR
-                0x0000000000000e14        0x8 ./event_groups.o
-                0x0000000000000e14                xEventGroupGetBitsFromISR
+                0x0000000000000e32        0x8 ./event_groups.o
+                0x0000000000000e32                xEventGroupGetBitsFromISR
  .text.xEventGroupSetBits
-                0x0000000000000e1c       0xaa ./event_groups.o
-                0x0000000000000e1c                xEventGroupSetBits
+                0x0000000000000e3a       0xaa ./event_groups.o
+                0x0000000000000e3a                xEventGroupSetBits
  .text.xEventGroupSync
-                0x0000000000000ec6       0xd6 ./event_groups.o
-                0x0000000000000ec6                xEventGroupSync
+                0x0000000000000ee4       0xd6 ./event_groups.o
+                0x0000000000000ee4                xEventGroupSync
  .text.vEventGroupDelete
-                0x0000000000000f9c       0x2c ./event_groups.o
-                0x0000000000000f9c                vEventGroupDelete
+                0x0000000000000fba       0x2c ./event_groups.o
+                0x0000000000000fba                vEventGroupDelete
  .text.vEventGroupSetBitsCallback
-                0x0000000000000fc8        0x6 ./event_groups.o
-                0x0000000000000fc8                vEventGroupSetBitsCallback
+                0x0000000000000fe6        0x6 ./event_groups.o
+                0x0000000000000fe6                vEventGroupSetBitsCallback
  .text.vEventGroupClearBitsCallback
-                0x0000000000000fce        0x6 ./event_groups.o
-                0x0000000000000fce                vEventGroupClearBitsCallback
+                0x0000000000000fec        0x6 ./event_groups.o
+                0x0000000000000fec                vEventGroupClearBitsCallback
  .text.pvPortMalloc
-                0x0000000000000fd4       0x64 ./heap_1.o
-                0x0000000000000fd4                pvPortMalloc
+                0x0000000000000ff2       0x64 ./heap_1.o
+                0x0000000000000ff2                pvPortMalloc
  .text.vPortFree
-                0x0000000000001038        0x2 ./heap_1.o
-                0x0000000000001038                vPortFree
+                0x0000000000001056        0x2 ./heap_1.o
+                0x0000000000001056                vPortFree
  .text.vPortInitialiseBlocks
-                0x000000000000103a        0xa ./heap_1.o
-                0x000000000000103a                vPortInitialiseBlocks
+                0x0000000000001058        0xa ./heap_1.o
+                0x0000000000001058                vPortInitialiseBlocks
  .text.xPortGetFreeHeapSize
-                0x0000000000001044       0x12 ./heap_1.o
-                0x0000000000001044                xPortGetFreeHeapSize
+                0x0000000000001062       0x12 ./heap_1.o
+                0x0000000000001062                xPortGetFreeHeapSize
  .text.vListInitialise
-                0x0000000000001056       0x1c ./list.o
-                0x0000000000001056                vListInitialise
+                0x0000000000001074       0x1c ./list.o
+                0x0000000000001074                vListInitialise
  .text.vListInitialiseItem
-                0x0000000000001072        0x8 ./list.o
-                0x0000000000001072                vListInitialiseItem
+                0x0000000000001090        0x8 ./list.o
+                0x0000000000001090                vListInitialiseItem
  .text.vListInsertEnd
-                0x000000000000107a       0x42 ./list.o
-                0x000000000000107a                vListInsertEnd
+                0x0000000000001098       0x42 ./list.o
+                0x0000000000001098                vListInsertEnd
  .text.vListInsert
-                0x00000000000010bc       0x70 ./list.o
-                0x00000000000010bc                vListInsert
+                0x00000000000010da       0x70 ./list.o
+                0x00000000000010da                vListInsert
  .text.uxListRemove
-                0x000000000000112c       0x48 ./list.o
-                0x000000000000112c                uxListRemove
+                0x000000000000114a       0x48 ./list.o
+                0x000000000000114a                uxListRemove
  .text.startup.main
-                0x0000000000001174       0x84 ./main.o
-                0x0000000000001174                main
+                0x0000000000001192       0x84 ./main.o
+                0x0000000000001192                main
  .text.pxPortInitialiseStack
-                0x00000000000011f8       0xd8 ./port.o
-                0x00000000000011f8                pxPortInitialiseStack
+                0x0000000000001216       0xd8 ./port.o
+                0x0000000000001216                pxPortInitialiseStack
  .text.xPortStartScheduler
-                0x00000000000012d0       0x6c ./port.o
-                0x00000000000012d0                xPortStartScheduler
+                0x00000000000012ee       0x6c ./port.o
+                0x00000000000012ee                xPortStartScheduler
  .text.vPortEndScheduler
-                0x000000000000133c        0x2 ./port.o
-                0x000000000000133c                vPortEndScheduler
+                0x000000000000135a        0x2 ./port.o
+                0x000000000000135a                vPortEndScheduler
  .text.vPortYield
-                0x000000000000133e       0xb2 ./port.o
-                0x000000000000133e                vPortYield
+                0x000000000000135c       0xb2 ./port.o
+                0x000000000000135c                vPortYield
  .text.vPortYieldFromTick
-                0x00000000000013f0       0xb8 ./port.o
-                0x00000000000013f0                vPortYieldFromTick
+                0x000000000000140e       0xb8 ./port.o
+                0x000000000000140e                vPortYieldFromTick
  .text.__vector_7
-                0x00000000000014a8        0x6 ./port.o
-                0x00000000000014a8                __vector_7
+                0x00000000000014c6        0x6 ./port.o
+                0x00000000000014c6                __vector_7
  .text.prvIsQueueEmpty
-                0x00000000000014ae       0x16 ./queue.o
+                0x00000000000014cc       0x16 ./queue.o
  .text.prvCopyDataToQueue
-                0x00000000000014c4       0xa6 ./queue.o
+                0x00000000000014e2       0xa6 ./queue.o
  .text.prvCopyDataFromQueue
-                0x000000000000156a       0x34 ./queue.o
+                0x0000000000001588       0x34 ./queue.o
  .text.prvUnlockQueue
-                0x000000000000159e       0x7c ./queue.o
+                0x00000000000015bc       0x7c ./queue.o
  .text.xQueueGenericReset
-                0x000000000000161a       0x7e ./queue.o
-                0x000000000000161a                xQueueGenericReset
+                0x0000000000001638       0x7e ./queue.o
+                0x0000000000001638                xQueueGenericReset
  .text.xQueueGenericCreate
-                0x0000000000001698       0x50 ./queue.o
-                0x0000000000001698                xQueueGenericCreate
+                0x00000000000016b6       0x50 ./queue.o
+                0x00000000000016b6                xQueueGenericCreate
  .text.xQueueGenericSend
-                0x00000000000016e8      0x12c ./queue.o
-                0x00000000000016e8                xQueueGenericSend
+                0x0000000000001706      0x12c ./queue.o
+                0x0000000000001706                xQueueGenericSend
  .text.xQueueCreateMutex
-                0x0000000000001814       0x34 ./queue.o
-                0x0000000000001814                xQueueCreateMutex
+                0x0000000000001832       0x34 ./queue.o
+                0x0000000000001832                xQueueCreateMutex
  .text.xQueueGenericSendFromISR
-                0x0000000000001848       0x5e ./queue.o
-                0x0000000000001848                xQueueGenericSendFromISR
+                0x0000000000001866       0x5e ./queue.o
+                0x0000000000001866                xQueueGenericSendFromISR
  .text.xQueueGiveFromISR
-                0x00000000000018a6       0x46 ./queue.o
-                0x00000000000018a6                xQueueGiveFromISR
+                0x00000000000018c4       0x46 ./queue.o
+                0x00000000000018c4                xQueueGiveFromISR
  .text.xQueueReceive
-                0x00000000000018ec      0x124 ./queue.o
-                0x00000000000018ec                xQueueReceive
+                0x000000000000190a      0x124 ./queue.o
+                0x000000000000190a                xQueueReceive
  .text.xQueueSemaphoreTake
-                0x0000000000001a10      0x184 ./queue.o
-                0x0000000000001a10                xQueueSemaphoreTake
+                0x0000000000001a2e      0x184 ./queue.o
+                0x0000000000001a2e                xQueueSemaphoreTake
  .text.xQueuePeek
-                0x0000000000001b94      0x124 ./queue.o
-                0x0000000000001b94                xQueuePeek
+                0x0000000000001bb2      0x124 ./queue.o
+                0x0000000000001bb2                xQueuePeek
  .text.xQueueReceiveFromISR
-                0x0000000000001cb8       0x5e ./queue.o
-                0x0000000000001cb8                xQueueReceiveFromISR
+                0x0000000000001cd6       0x5e ./queue.o
+                0x0000000000001cd6                xQueueReceiveFromISR
  .text.xQueuePeekFromISR
-                0x0000000000001d16       0x2e ./queue.o
-                0x0000000000001d16                xQueuePeekFromISR
+                0x0000000000001d34       0x2e ./queue.o
+                0x0000000000001d34                xQueuePeekFromISR
  .text.uxQueueMessagesWaiting
-                0x0000000000001d44       0x10 ./queue.o
-                0x0000000000001d44                uxQueueMessagesWaiting
+                0x0000000000001d62       0x10 ./queue.o
+                0x0000000000001d62                uxQueueMessagesWaiting
  .text.uxQueueSpacesAvailable
-                0x0000000000001d54       0x14 ./queue.o
-                0x0000000000001d54                uxQueueSpacesAvailable
+                0x0000000000001d72       0x14 ./queue.o
+                0x0000000000001d72                uxQueueSpacesAvailable
  .text.uxQueueMessagesWaitingFromISR
-                0x0000000000001d68        0x6 ./queue.o
-                0x0000000000001d68                uxQueueMessagesWaitingFromISR
+                0x0000000000001d86        0x6 ./queue.o
+                0x0000000000001d86                uxQueueMessagesWaitingFromISR
  .text.vQueueDelete
-                0x0000000000001d6e        0x4 ./queue.o
-                0x0000000000001d6e                vQueueDelete
+                0x0000000000001d8c        0x4 ./queue.o
+                0x0000000000001d8c                vQueueDelete
  .text.xQueueIsQueueEmptyFromISR
-                0x0000000000001d72        0xc ./queue.o
-                0x0000000000001d72                xQueueIsQueueEmptyFromISR
+                0x0000000000001d90        0xc ./queue.o
+                0x0000000000001d90                xQueueIsQueueEmptyFromISR
  .text.xQueueIsQueueFullFromISR
-                0x0000000000001d7e        0xe ./queue.o
-                0x0000000000001d7e                xQueueIsQueueFullFromISR
+                0x0000000000001d9c        0xe ./queue.o
+                0x0000000000001d9c                xQueueIsQueueFullFromISR
  .text.prvResetNextTaskUnblockTime
-                0x0000000000001d8c       0x36 ./tasks.o
+                0x0000000000001daa       0x36 ./tasks.o
  .text.prvAddCurrentTaskToDelayedList
-                0x0000000000001dc2       0xb8 ./tasks.o
+                0x0000000000001de0       0xb8 ./tasks.o
  .text.prvIdleTask
-                0x0000000000001e7a       0x58 ./tasks.o
+                0x0000000000001e98       0x58 ./tasks.o
  .text.xTaskCreate
-                0x0000000000001ed2      0x204 ./tasks.o
-                0x0000000000001ed2                xTaskCreate
+                0x0000000000001ef0      0x204 ./tasks.o
+                0x0000000000001ef0                xTaskCreate
  .text.vTaskDelete
-                0x00000000000020d6       0xaa ./tasks.o
-                0x00000000000020d6                vTaskDelete
+                0x00000000000020f4       0xaa ./tasks.o
+                0x00000000000020f4                vTaskDelete
  .text.vTaskResume
-                0x0000000000002180       0x8e ./tasks.o
-                0x0000000000002180                vTaskResume
+                0x000000000000219e       0x8e ./tasks.o
+                0x000000000000219e                vTaskResume
  .text.xTaskResumeFromISR
-                0x000000000000220e       0x90 ./tasks.o
-                0x000000000000220e                xTaskResumeFromISR
+                0x000000000000222c       0x90 ./tasks.o
+                0x000000000000222c                xTaskResumeFromISR
  .text.vTaskStartScheduler
-                0x000000000000229e       0x54 ./tasks.o
-                0x000000000000229e                vTaskStartScheduler
+                0x00000000000022bc       0x54 ./tasks.o
+                0x00000000000022bc                vTaskStartScheduler
  .text.vTaskEndScheduler
-                0x00000000000022f2        0xa ./tasks.o
-                0x00000000000022f2                vTaskEndScheduler
+                0x0000000000002310        0xa ./tasks.o
+                0x0000000000002310                vTaskEndScheduler
  .text.vTaskSuspendAll
-                0x00000000000022fc        0xc ./tasks.o
-                0x00000000000022fc                vTaskSuspendAll
+                0x000000000000231a        0xc ./tasks.o
+                0x000000000000231a                vTaskSuspendAll
  .text.xTaskGetTickCount
-                0x0000000000002308       0x14 ./tasks.o
-                0x0000000000002308                xTaskGetTickCount
+                0x0000000000002326       0x14 ./tasks.o
+                0x0000000000002326                xTaskGetTickCount
  .text.xTaskGetTickCountFromISR
-                0x000000000000231c        0xa ./tasks.o
-                0x000000000000231c                xTaskGetTickCountFromISR
+                0x000000000000233a        0xa ./tasks.o
+                0x000000000000233a                xTaskGetTickCountFromISR
  .text.uxTaskGetNumberOfTasks
-                0x0000000000002326        0x6 ./tasks.o
-                0x0000000000002326                uxTaskGetNumberOfTasks
+                0x0000000000002344        0x6 ./tasks.o
+                0x0000000000002344                uxTaskGetNumberOfTasks
  .text.pcTaskGetName
-                0x000000000000232c       0x10 ./tasks.o
-                0x000000000000232c                pcTaskGetName
+                0x000000000000234a       0x10 ./tasks.o
+                0x000000000000234a                pcTaskGetName
  .text.xTaskIncrementTick
-                0x000000000000233c      0x158 ./tasks.o
-                0x000000000000233c                xTaskIncrementTick
+                0x000000000000235a      0x158 ./tasks.o
+                0x000000000000235a                xTaskIncrementTick
  .text.xTaskResumeAll
-                0x0000000000002494       0xde ./tasks.o
-                0x0000000000002494                xTaskResumeAll
+                0x00000000000024b2       0xde ./tasks.o
+                0x00000000000024b2                xTaskResumeAll
  .text.vTaskDelayUntil
-                0x0000000000002572       0x70 ./tasks.o
-                0x0000000000002572                vTaskDelayUntil
+                0x0000000000002590       0x70 ./tasks.o
+                0x0000000000002590                vTaskDelayUntil
  .text.vTaskDelay
-                0x00000000000025e2       0x2a ./tasks.o
-                0x00000000000025e2                vTaskDelay
+                0x0000000000002600       0x2a ./tasks.o
+                0x0000000000002600                vTaskDelay
  .text.vTaskSwitchContext
-                0x000000000000260c       0x86 ./tasks.o
-                0x000000000000260c                vTaskSwitchContext
+                0x000000000000262a       0x86 ./tasks.o
+                0x000000000000262a                vTaskSwitchContext
  .text.vTaskSuspend
-                0x0000000000002692       0xac ./tasks.o
-                0x0000000000002692                vTaskSuspend
+                0x00000000000026b0       0xac ./tasks.o
+                0x00000000000026b0                vTaskSuspend
  .text.vTaskPlaceOnEventList
-                0x000000000000273e       0x22 ./tasks.o
-                0x000000000000273e                vTaskPlaceOnEventList
+                0x000000000000275c       0x22 ./tasks.o
+                0x000000000000275c                vTaskPlaceOnEventList
  .text.vTaskPlaceOnUnorderedEventList
-                0x0000000000002760       0x30 ./tasks.o
-                0x0000000000002760                vTaskPlaceOnUnorderedEventList
+                0x000000000000277e       0x30 ./tasks.o
+                0x000000000000277e                vTaskPlaceOnUnorderedEventList
  .text.xTaskRemoveFromEventList
-                0x0000000000002790       0x80 ./tasks.o
-                0x0000000000002790                xTaskRemoveFromEventList
+                0x00000000000027ae       0x80 ./tasks.o
+                0x00000000000027ae                xTaskRemoveFromEventList
  .text.vTaskRemoveFromUnorderedEventList
-                0x0000000000002810       0x64 ./tasks.o
-                0x0000000000002810                vTaskRemoveFromUnorderedEventList
+                0x000000000000282e       0x64 ./tasks.o
+                0x000000000000282e                vTaskRemoveFromUnorderedEventList
  .text.vTaskSetTimeOutState
-                0x0000000000002874       0x20 ./tasks.o
-                0x0000000000002874                vTaskSetTimeOutState
+                0x0000000000002892       0x20 ./tasks.o
+                0x0000000000002892                vTaskSetTimeOutState
  .text.vTaskInternalSetTimeOutState
-                0x0000000000002894       0x16 ./tasks.o
-                0x0000000000002894                vTaskInternalSetTimeOutState
+                0x00000000000028b2       0x16 ./tasks.o
+                0x00000000000028b2                vTaskInternalSetTimeOutState
  .text.xTaskCheckForTimeOut
-                0x00000000000028aa       0x66 ./tasks.o
-                0x00000000000028aa                xTaskCheckForTimeOut
+                0x00000000000028c8       0x66 ./tasks.o
+                0x00000000000028c8                xTaskCheckForTimeOut
  .text.vTaskMissedYield
-                0x0000000000002910        0x8 ./tasks.o
-                0x0000000000002910                vTaskMissedYield
+                0x000000000000292e        0x8 ./tasks.o
+                0x000000000000292e                vTaskMissedYield
  .text.xTaskGetCurrentTaskHandle
-                0x0000000000002918        0xa ./tasks.o
-                0x0000000000002918                xTaskGetCurrentTaskHandle
+                0x0000000000002936        0xa ./tasks.o
+                0x0000000000002936                xTaskGetCurrentTaskHandle
  .text.xTaskPriorityInherit
-                0x0000000000002922       0xc6 ./tasks.o
-                0x0000000000002922                xTaskPriorityInherit
+                0x0000000000002940       0xc6 ./tasks.o
+                0x0000000000002940                xTaskPriorityInherit
  .text.xTaskPriorityDisinherit
-                0x00000000000029e8       0x74 ./tasks.o
-                0x00000000000029e8                xTaskPriorityDisinherit
+                0x0000000000002a06       0x74 ./tasks.o
+                0x0000000000002a06                xTaskPriorityDisinherit
  .text.vTaskPriorityDisinheritAfterTimeout
-                0x0000000000002a5c       0x8e ./tasks.o
-                0x0000000000002a5c                vTaskPriorityDisinheritAfterTimeout
+                0x0000000000002a7a       0x8e ./tasks.o
+                0x0000000000002a7a                vTaskPriorityDisinheritAfterTimeout
  .text.uxTaskResetEventItemValue
-                0x0000000000002aea       0x2e ./tasks.o
-                0x0000000000002aea                uxTaskResetEventItemValue
+                0x0000000000002b08       0x2e ./tasks.o
+                0x0000000000002b08                uxTaskResetEventItemValue
  .text.pvTaskIncrementMutexHeldCount
-                0x0000000000002b18       0x24 ./tasks.o
-                0x0000000000002b18                pvTaskIncrementMutexHeldCount
+                0x0000000000002b36       0x24 ./tasks.o
+                0x0000000000002b36                pvTaskIncrementMutexHeldCount
  .text.ulTaskNotifyTake
-                0x0000000000002b3c       0xa2 ./tasks.o
-                0x0000000000002b3c                ulTaskNotifyTake
+                0x0000000000002b5a       0xa2 ./tasks.o
+                0x0000000000002b5a                ulTaskNotifyTake
  .text.xTaskNotifyWait
-                0x0000000000002bde      0x110 ./tasks.o
-                0x0000000000002bde                xTaskNotifyWait
+                0x0000000000002bfc      0x110 ./tasks.o
+                0x0000000000002bfc                xTaskNotifyWait
  .text.xTaskGenericNotify
-                0x0000000000002cee       0xd2 ./tasks.o
-                0x0000000000002cee                xTaskGenericNotify
+                0x0000000000002d0c       0xd2 ./tasks.o
+                0x0000000000002d0c                xTaskGenericNotify
  .text.xTaskGenericNotifyFromISR
-                0x0000000000002dc0       0xf4 ./tasks.o
-                0x0000000000002dc0                xTaskGenericNotifyFromISR
+                0x0000000000002dde       0xf4 ./tasks.o
+                0x0000000000002dde                xTaskGenericNotifyFromISR
  .text.vTaskNotifyGiveFromISR
-                0x0000000000002eb4       0xa4 ./tasks.o
-                0x0000000000002eb4                vTaskNotifyGiveFromISR
+                0x0000000000002ed2       0xa4 ./tasks.o
+                0x0000000000002ed2                vTaskNotifyGiveFromISR
  .text.xTaskNotifyStateClear
-                0x0000000000002f58       0x28 ./tasks.o
-                0x0000000000002f58                xTaskNotifyStateClear
+                0x0000000000002f76       0x28 ./tasks.o
+                0x0000000000002f76                xTaskNotifyStateClear
  .text.libgcc.mul
-                0x0000000000002f80        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002f9e        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.div
-                0x0000000000002f80       0x18 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
-                0x0000000000002f80                __udivmodqi4
- .text.libgcc   0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002f9e       0x18 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002f9e                __udivmodqi4
+ .text.libgcc   0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.prologue
-                0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.builtins
-                0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.fmul
-                0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.fixed
-                0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+                0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
  .text.libgcc.mul
-                0x0000000000002f98        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fb6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.div
-                0x0000000000002f98       0x28 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
-                0x0000000000002f98                __udivmodhi4
- .text.libgcc   0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fb6       0x28 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fb6                __udivmodhi4
+ .text.libgcc   0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.prologue
-                0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.builtins
-                0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.fmul
-                0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.fixed
-                0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
  .text.libgcc.mul
-                0x0000000000002fc0        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000002fde        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.div
-                0x0000000000002fc0       0x28 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
-                0x0000000000002fc0                __divmodhi4
-                0x0000000000002fc0                _div
- .text.libgcc   0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000002fde       0x28 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000002fde                __divmodhi4
+                0x0000000000002fde                _div
+ .text.libgcc   0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.prologue
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.builtins
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.fmul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.fixed
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
  .text.libgcc.mul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.div
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
- .text.libgcc   0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.prologue
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.builtins
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.fmul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.fixed
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  .text.libgcc.mul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.div
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
- .text.libgcc   0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.prologue
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.builtins
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.fmul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.fixed
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
  .text.libgcc.mul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.div
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
- .text.libgcc   0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.prologue
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.builtins
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.fmul
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.libgcc.fixed
-                0x0000000000002fe8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+                0x0000000000003006        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
  .text.avr-libc
-                0x0000000000002fe8       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libc.a(memcpy.o)
-                0x0000000000002fe8                memcpy
-                0x0000000000002ffa                . = ALIGN (0x2)
+                0x0000000000003006       0x12 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libc.a(memcpy.o)
+                0x0000000000003006                memcpy
+                0x0000000000003018                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x0000000000002ffa        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
-                0x0000000000002ffa                exit
-                0x0000000000002ffa                _exit
+ .fini9         0x0000000000003018        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+                0x0000000000003018                exit
+                0x0000000000003018                _exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -700,11 +700,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x0000000000002ffa        0x4 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .fini0         0x0000000000003018        0x4 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
  *(.fini0)
-                0x0000000000002ffe                _etext = .
+                0x000000000000301c                _etext = .
 
-.data           0x0000000000800060       0x48 load address 0x0000000000002ffe
+.data           0x0000000000800060       0x66 load address 0x000000000000301c
                 0x0000000000800060                PROVIDE (__data_start, .)
  *(.data)
  .data          0x0000000000800060        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
@@ -737,111 +737,124 @@ END GROUP
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x0000000000800071       0x32 ./main.o
+                0x0000000000800071        0x6 ./Clock.o
+ .rodata.Pattern_Arrow
+                0x0000000000800077        0x8 ./LCD_program.o
+                0x0000000000800077                Pattern_Arrow
+ .rodata.Pattern_AM
+                0x000000000080007f        0x8 ./LCD_program.o
+                0x000000000080007f                Pattern_AM
+ .rodata.Pattern_Alarm
+                0x0000000000800087        0x8 ./LCD_program.o
+                0x0000000000800087                Pattern_Alarm
  .rodata.str1.1
-                0x00000000008000a3        0x5 ./tasks.o
+                0x000000000080008f       0x32 ./main.o
+ .rodata.str1.1
+                0x00000000008000c1        0x5 ./tasks.o
  *(.gnu.linkonce.d*)
-                0x00000000008000a8                . = ALIGN (0x2)
-                0x00000000008000a8                _edata = .
-                0x00000000008000a8                PROVIDE (__data_end, .)
+                0x00000000008000c6                . = ALIGN (0x2)
+                0x00000000008000c6                _edata = .
+                0x00000000008000c6                PROVIDE (__data_end, .)
 
-.bss            0x00000000008000a8      0x65e
-                0x00000000008000a8                PROVIDE (__bss_start, .)
+.bss            0x00000000008000c6      0x65f
+                0x00000000008000c6                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
- .bss           0x00000000008000a8        0x0 ./Clock.o
- .bss           0x00000000008000a8        0x0 ./DIO_Program.o
- .bss           0x00000000008000a8        0x0 ./KBD_program.o
- .bss           0x00000000008000a8        0x0 ./LCD_program.o
- .bss           0x00000000008000a8        0x0 ./croutine.o
- .bss           0x00000000008000a8        0x0 ./event_groups.o
- .bss           0x00000000008000a8        0x0 ./heap_1.o
- .bss           0x00000000008000a8        0x0 ./list.o
- .bss           0x00000000008000a8        0x0 ./main.o
- .bss           0x00000000008000a8        0x0 ./port.o
- .bss           0x00000000008000a8        0x0 ./queue.o
- .bss           0x00000000008000a8        0x0 ./tasks.o
- .bss           0x00000000008000a8        0x0 ./timers.o
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
- .bss           0x00000000008000a8        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libc.a(memcpy.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/crtatmega32.o
+ .bss           0x00000000008000c6        0x0 ./Clock.o
+ .bss           0x00000000008000c6        0x0 ./DIO_Program.o
+ .bss           0x00000000008000c6        0x0 ./KBD_program.o
+ .bss           0x00000000008000c6        0x0 ./LCD_program.o
+ .bss           0x00000000008000c6        0x0 ./croutine.o
+ .bss           0x00000000008000c6        0x0 ./event_groups.o
+ .bss           0x00000000008000c6        0x0 ./heap_1.o
+ .bss           0x00000000008000c6        0x0 ./list.o
+ .bss           0x00000000008000c6        0x0 ./main.o
+ .bss           0x00000000008000c6        0x0 ./port.o
+ .bss           0x00000000008000c6        0x0 ./queue.o
+ .bss           0x00000000008000c6        0x0 ./tasks.o
+ .bss           0x00000000008000c6        0x0 ./timers.o
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodqi4.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_udivmodhi4.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_divmodhi4.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_exit.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_copy_data.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/avr5/libgcc.a(_clear_bss.o)
+ .bss           0x00000000008000c6        0x0 /usr/lib/gcc/avr/5.4.0/../../../avr/lib/avr5/libc.a(memcpy.o)
  *(.bss*)
  .bss.KPD_input
-                0x00000000008000a8        0x2 ./Clock.o
-                0x00000000008000a8                KPD_input
- .bss.Hours     0x00000000008000aa        0x1 ./Clock.o
-                0x00000000008000aa                Hours
- .bss.Minutes   0x00000000008000ab        0x1 ./Clock.o
-                0x00000000008000ab                Minutes
- .bss.Seconds   0x00000000008000ac        0x1 ./Clock.o
-                0x00000000008000ac                Seconds
+                0x00000000008000c6        0x2 ./Clock.o
+                0x00000000008000c6                KPD_input
+ .bss.AM_PM     0x00000000008000c8        0x1 ./Clock.o
+                0x00000000008000c8                AM_PM
+ .bss.Hours     0x00000000008000c9        0x1 ./Clock.o
+                0x00000000008000c9                Hours
+ .bss.Minutes   0x00000000008000ca        0x1 ./Clock.o
+                0x00000000008000ca                Minutes
+ .bss.Seconds   0x00000000008000cb        0x1 ./Clock.o
+                0x00000000008000cb                Seconds
  .bss.pucAlignedHeap.2085
-                0x00000000008000ad        0x2 ./heap_1.o
+                0x00000000008000cc        0x2 ./heap_1.o
  .bss.xNextFreeByte
-                0x00000000008000af        0x2 ./heap_1.o
- .bss.ucHeap    0x00000000008000b1      0x5dc ./heap_1.o
+                0x00000000008000ce        0x2 ./heap_1.o
+ .bss.ucHeap    0x00000000008000d0      0x5dc ./heap_1.o
  .bss.uxSchedulerSuspended
-                0x000000000080068d        0x1 ./tasks.o
+                0x00000000008006ac        0x1 ./tasks.o
  .bss.xIdleTaskHandle
-                0x000000000080068e        0x2 ./tasks.o
+                0x00000000008006ad        0x2 ./tasks.o
  .bss.xNextTaskUnblockTime
-                0x0000000000800690        0x2 ./tasks.o
+                0x00000000008006af        0x2 ./tasks.o
  .bss.uxTaskNumber
-                0x0000000000800692        0x1 ./tasks.o
+                0x00000000008006b1        0x1 ./tasks.o
  .bss.xNumOfOverflows
-                0x0000000000800693        0x1 ./tasks.o
+                0x00000000008006b2        0x1 ./tasks.o
  .bss.xYieldPending
-                0x0000000000800694        0x1 ./tasks.o
+                0x00000000008006b3        0x1 ./tasks.o
  .bss.uxPendedTicks
-                0x0000000000800695        0x1 ./tasks.o
+                0x00000000008006b4        0x1 ./tasks.o
  .bss.xSchedulerRunning
-                0x0000000000800696        0x1 ./tasks.o
+                0x00000000008006b5        0x1 ./tasks.o
  .bss.uxTopReadyPriority
-                0x0000000000800697        0x1 ./tasks.o
+                0x00000000008006b6        0x1 ./tasks.o
  .bss.xTickCount
-                0x0000000000800698        0x2 ./tasks.o
- .bss.uxCurrentNumberOfTasks
-                0x000000000080069a        0x1 ./tasks.o
- .bss.xSuspendedTaskList
-                0x000000000080069b        0x9 ./tasks.o
- .bss.uxDeletedTasksWaitingCleanUp
-                0x00000000008006a4        0x1 ./tasks.o
- .bss.xTasksWaitingTermination
-                0x00000000008006a5        0x9 ./tasks.o
- .bss.xPendingReadyList
-                0x00000000008006ae        0x9 ./tasks.o
- .bss.pxOverflowDelayedTaskList
                 0x00000000008006b7        0x2 ./tasks.o
- .bss.pxDelayedTaskList
-                0x00000000008006b9        0x2 ./tasks.o
- .bss.xDelayedTaskList2
-                0x00000000008006bb        0x9 ./tasks.o
- .bss.xDelayedTaskList1
+ .bss.uxCurrentNumberOfTasks
+                0x00000000008006b9        0x1 ./tasks.o
+ .bss.xSuspendedTaskList
+                0x00000000008006ba        0x9 ./tasks.o
+ .bss.uxDeletedTasksWaitingCleanUp
+                0x00000000008006c3        0x1 ./tasks.o
+ .bss.xTasksWaitingTermination
                 0x00000000008006c4        0x9 ./tasks.o
+ .bss.xPendingReadyList
+                0x00000000008006cd        0x9 ./tasks.o
+ .bss.pxOverflowDelayedTaskList
+                0x00000000008006d6        0x2 ./tasks.o
+ .bss.pxDelayedTaskList
+                0x00000000008006d8        0x2 ./tasks.o
+ .bss.xDelayedTaskList2
+                0x00000000008006da        0x9 ./tasks.o
+ .bss.xDelayedTaskList1
+                0x00000000008006e3        0x9 ./tasks.o
  .bss.pxReadyTasksLists
-                0x00000000008006cd       0x2d ./tasks.o
+                0x00000000008006ec       0x2d ./tasks.o
  .bss.pxCurrentTCB
-                0x00000000008006fa        0x2 ./tasks.o
-                0x00000000008006fa                pxCurrentTCB
+                0x0000000000800719        0x2 ./tasks.o
+                0x0000000000800719                pxCurrentTCB
  *(COMMON)
- COMMON         0x00000000008006fc        0x2 ./Clock.o
-                0x00000000008006fc                LCD
- COMMON         0x00000000008006fe        0x8 ./KBD_program.o
-                0x00000000008006fe                KBD_Au8ColsPins
-                0x0000000000800702                KBD_Au8RowsPins
-                0x0000000000800706                PROVIDE (__bss_end, .)
-                0x0000000000002ffe                __data_load_start = LOADADDR (.data)
-                0x0000000000003046                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x000000000080071b        0x2 ./Clock.o
+                0x000000000080071b                LCD
+ COMMON         0x000000000080071d        0x8 ./KBD_program.o
+                0x000000000080071d                KBD_Au8ColsPins
+                0x0000000000800721                KBD_Au8RowsPins
+                0x0000000000800725                PROVIDE (__bss_end, .)
+                0x000000000000301c                __data_load_start = LOADADDR (.data)
+                0x0000000000003082                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x0000000000800706        0x0
+.noinit         0x0000000000800725        0x0
                 [!provide]                        PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                        PROVIDE (__noinit_end, .)
-                0x0000000000800706                _end = .
+                0x0000000000800725                _end = .
                 [!provide]                        PROVIDE (__heap_start, .)
 
 .eeprom         0x0000000000810000        0x0

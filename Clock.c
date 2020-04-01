@@ -20,6 +20,7 @@
 u8 Seconds = 0;
 u8 Minutes = 0;
 u8 Hours = 0;
+u8 AM_PM = AM;
 u8 KPD_Check_frequency = configTICK_RATE_HZ*2;
 SemaphoreHandle_t LCD ;
 xQueueHandle KPD_input = NULL;
@@ -27,12 +28,14 @@ xQueueHandle KPD_input = NULL;
 void Clock_Print_Default_Interface(void)
 {
 	LCD_Set_Block(hours_position);
-	LCD_Void_Write_Number_2(Hours);
+	LCD_Void_Write_Number_2((Hours%12)+1);
 	LCD_Set_Block(minutes_position-1);
 	LCD_Void_Write_Data(':');
-	LCD_Void_Write_Number_2(Minutes);
-	LCD_Set_Block(seconds_position-1);
-	LCD_Void_Write_Data(':');
+	LCD_Void_Write_Number_2(Minutes%60);
+	LCD_Set_Block(Am_PM_position);
+	if(AM_PM == AM) LCD_Void_Write_String("AM");
+	else LCD_Void_Write_String("PM");
+	LCD_Set_Block(seconds_position);
 	LCD_Void_Write_Number_2(Seconds);
 
 }
@@ -42,8 +45,6 @@ void Clock_Second(void *pvParameters)
 	LCD = xSemaphoreCreateMutex();
 	TickType_t MyLastUnblockS;
 	MyLastUnblockS = xTaskGetTickCount();
-	LCD_Set_Block(seconds_position-1);
-	LCD_Void_Write_Data(':');
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -90,12 +91,21 @@ void Clock_Hours(void *pvParameters)
 		{
 			LCD_Set_Block(hours_position);
 			LCD_Void_Write_Number_2((Hours%12)+1);
+			LCD_Set_Block(Am_PM_position);
+			if(AM_PM == AM) LCD_Void_Write_String("AM");
+			else LCD_Void_Write_String("PM");
 			xSemaphoreGive(LCD);
 		}
 
 		vTaskDelayUntil(&MyLastUnblockH,hours_frequency);
 		Hours++;
-		Hours %= 24;
+		if(Hours == 12)
+		{
+			AM_PM++;
+			AM_PM %= 2;
+		}
+		Hours %= 12;
+
 	}
 }
 
@@ -148,13 +158,13 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 							current_block++;
 						}
 						current_block++;
-						if(current_block == maximum_cursor_range+2) /*if cursor hits maximum range get it back to the beginning*/
+						if(current_block == maximum_cursor_range) /*if cursor hits maximum range get it back to the beginning*/
 						{
 							current_block = minimum_cursor_range;
 							LCD_Set_Block(current_block);
 
 						}
-						LCD_Void_Write_Data(Up_Arrow);
+						LCD_Void_Write_Data(Pixel_Arrow);
 						break;
 					case '<':
 						if((current_block-1)%3 == 0){
@@ -165,13 +175,30 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 						current_block--;
 						if(current_block == minimum_cursor_range-2)
 						{
-							current_block = maximum_cursor_range;
+							current_block = maximum_cursor_range-1;
 							LCD_Set_Block(current_block);
 
 						}
 						LCD_Set_Block(current_block);
-						LCD_Void_Write_Data(Up_Arrow);
+						LCD_Void_Write_Data(Pixel_Arrow);
 						break;
+
+					case Up_Arrow:
+
+						if(current_block == Am_PM_position + second_row_start)
+						{
+
+
+							AM_PM++;
+							AM_PM %= 2;
+							LCD_Set_Block(Am_PM_position);
+							if(AM_PM == AM) LCD_Void_Write_String("AM");
+							else LCD_Void_Write_String("PM");
+							LCD_Set_Block(current_block);
+							LCD_Void_Write_Data(Pixel_Arrow);
+						}
+							break;
+
 					default:
 						/*change the time according to the user input*/
 						switch (current_block)
@@ -180,19 +207,13 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 									Hours = ((pressed-'0')*10)+(Hours%10);
 									break;
 								case hours_position+17:
-									Hours = (pressed-'0')+((Hours/10)*10);
+									Hours = (pressed-1-'0')+((Hours/10)*10);
 									break;
 								case minutes_position+16:
 									Minutes = ((pressed-'0')*10)+(Minutes%10);
 									break;
 								case minutes_position+17:
 									Minutes = (pressed-'0')+((Minutes/10)*10);
-									break;
-								case seconds_position+16:
-									Seconds = ((pressed-'0')*10)+(Seconds%10);
-									break;
-								case seconds_position+17:
-									Seconds = (pressed-'0')+((Seconds/10)*10);
 									break;
 								}
 						LCD_Set_Block(current_block-second_row_start);
@@ -211,12 +232,12 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 							LCD_Set_Block(current_block);
 
 						}
-						LCD_Void_Write_Data(Up_Arrow);
+						LCD_Void_Write_Data(Pixel_Arrow);
 						break;
 
 					}
-					vTaskDelay(3);
 
+					vTaskDelay(3);
 					continue;
 				}
 
@@ -231,7 +252,7 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 						current_block = second_row_start; //when taking the LCD set the cursor to the 2nd row
 						take_lach = 1;
 						LCD_Set_Block(current_block);
-						LCD_Void_Write_Data(Up_Arrow);
+						LCD_Void_Write_Data(Pixel_Arrow);
 						take_lcd++;
 						KPD_Check_frequency = KPD_Check_frequency_Fast; // enter fast KPD checking freq
 					}

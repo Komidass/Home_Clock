@@ -12,15 +12,20 @@
 #define minutes_frequency configTICK_RATE_HZ*60
 #define hours_frequency   configTICK_RATE_HZ*3600
 
-#define seconds_position 6
+#define seconds_position 14
 #define minutes_position 3
 #define hours_position 	 0
+#define Am_PM_position 6
+
 #define second_row_start 16
 #define KPD_Check_frequency_Slow configTICK_RATE_HZ*2
 #define KPD_Check_frequency_Fast 1
 
 #define minimum_cursor_range 16
 #define maximum_cursor_range 23
+
+#define AM 0
+#define PM 1
 void Clock_Second(void *pvParameters);
 void Clock_Minute(void *pvParameters);
 void Clock_Hours(void *pvParameters);
