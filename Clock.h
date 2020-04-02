@@ -19,7 +19,7 @@
 
 #define second_row_start 16
 #define KPD_Check_frequency_Slow configTICK_RATE_HZ*2
-#define KPD_Check_frequency_Fast 1
+#define KPD_Check_frequency_Fast configTICK_RATE_HZ/configTICK_RATE_HZ
 
 #define minimum_cursor_range 16
 #define maximum_cursor_range 23

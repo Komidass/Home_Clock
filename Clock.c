@@ -21,9 +21,13 @@ u8 Seconds = 0;
 u8 Minutes = 0;
 u8 Hours = 0;
 u8 AM_PM = AM;
-u8 KPD_Check_frequency = configTICK_RATE_HZ*2;
+u8 KPD_Check_frequency = KPD_Check_frequency_Slow;
 SemaphoreHandle_t LCD ;
 xQueueHandle KPD_input = NULL;
+xQueueHandle minutes_adjusted = NULL; //for adjusted minutes to add in the hours
+TaskHandle_t Minutes_handle = NULL;
+TaskHandle_t Hours_handle = NULL;
+
 
 void Clock_Print_Default_Interface(void)
 {
@@ -82,11 +86,12 @@ void Clock_Minute(void *pvParameters)
 void Clock_Hours(void *pvParameters)
 {
 	TickType_t MyLastUnblockH;
-	MyLastUnblockH = xTaskGetTickCount();
+	MyLastUnblockH = xTaskGetTickCount() - Minutes*minutes_frequency;
 	LCD_Set_Block(minutes_position-1);
 	LCD_Void_Write_Data(':');
 	while(1)
 	{
+
 		if(xSemaphoreTake(LCD,10))
 		{
 			LCD_Set_Block(hours_position);
@@ -95,7 +100,9 @@ void Clock_Hours(void *pvParameters)
 			if(AM_PM == AM) LCD_Void_Write_String("AM");
 			else LCD_Void_Write_String("PM");
 			xSemaphoreGive(LCD);
+
 		}
+
 
 		vTaskDelayUntil(&MyLastUnblockH,hours_frequency);
 		Hours++;
@@ -133,11 +140,11 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 	u8 take_lach = 0;//to latch entering any key other the the LCD taking key if the entering key is not pressed continue the loop
 	u8 current_block = second_row_start;
 	u8 take_lcd = 0;//to latch taking LCD
+	u8 time_adjusted = 0;//checks if the time has been adjusted
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
 		{
-
 			switch (pressed)
 			{
 			default:
@@ -187,8 +194,7 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 
 						if(current_block == Am_PM_position + second_row_start)
 						{
-
-
+							/* if on the AM_Pm pos pressing the up arrow changes between AM and PM*/
 							AM_PM++;
 							AM_PM %= 2;
 							LCD_Set_Block(Am_PM_position);
@@ -205,19 +211,25 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 								{
 								case hours_position+16:
 									Hours = ((pressed-'0')*10)+(Hours%10);
+									time_adjusted = 1;
 									break;
 								case hours_position+17:
 									Hours = (pressed-1-'0')+((Hours/10)*10);
+									time_adjusted = 1;
 									break;
 								case minutes_position+16:
 									Minutes = ((pressed-'0')*10)+(Minutes%10);
+									time_adjusted = 1;
 									break;
 								case minutes_position+17:
 									Minutes = (pressed-'0')+((Minutes/10)*10);
+									time_adjusted = 1;
 									break;
 								}
+
+
 						LCD_Set_Block(current_block-second_row_start);
-						LCD_Void_Write_Data(pressed);
+						if(current_block != Am_PM_position + second_row_start)	LCD_Void_Write_Data(pressed);
 
 						LCD_Set_Block(current_block+1);
 						if((current_block+1)%3 == 0){
@@ -226,7 +238,7 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 							current_block++;
 						}
 						current_block++;
-						if(current_block == maximum_cursor_range+2)
+						if(current_block == maximum_cursor_range)
 						{
 							current_block = minimum_cursor_range;
 							LCD_Set_Block(current_block);
@@ -268,6 +280,26 @@ void Clock_Enter_Typing_Mode(void *pvParameters)
 					LCD_Void_Write_Data(' ');
 					vTaskDelay(configTICK_RATE_HZ);//to avoid quick taking and giving the LCD
 					take_lcd++;
+
+					if(time_adjusted)
+					{
+						if(Minutes_handle != NULL)
+						{
+							vTaskDelete(Minutes_handle);
+							Minutes_handle = NULL;
+						}
+						xTaskCreate(Clock_Minute,"minutes",70,NULL,2,&Minutes_handle);
+
+						if(Hours_handle != NULL)
+						{
+							vTaskDelete(Hours_handle);
+							Hours_handle = NULL;
+						}
+						time_adjusted = 0;
+					}
+
+					xTaskCreate(Clock_Hours,"hours",70,NULL,2,Hours_handle);
+
 
 				}
 				break;
