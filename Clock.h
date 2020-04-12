@@ -30,7 +30,7 @@ void Clock_Second(void *pvParameters);
 void Clock_Minute(void *pvParameters);
 void Clock_Hours(void *pvParameters);
 void Clock_Check_KPD(void *pvParameters);
-void Clock_Enter_Typing_Mode(void *pvParameters);
+void Clock_Typing_Mode(void *pvParameters);
 void Clock_Print_Default_Interface(void);
 
 

@@ -1,0 +1,3 @@
+ATMEL AVR Project Kit + Working Area ATMEGAxxx With ZIF Socket 60
+LCD 2x16 45
+keypad future 25
