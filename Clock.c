@@ -24,6 +24,7 @@ u8 AM_PM = AM;
 u8 Alarm_Minutes;
 u8 Alarm_Hours;
 u8 Alarm_AM_PM;
+u8 flags;
 u8 KPD_Check_frequency = KPD_Check_frequency_Slow;
 SemaphoreHandle_t LCD ;
 xQueueHandle KPD_input = NULL;
@@ -74,6 +75,18 @@ void Clock_Minute(void *pvParameters)
 	LCD_Void_Write_Data(':');
 	while(1)
 	{
+		if(Get_Bit(flags,alarm_set) == 1)//alarm is set
+		{
+			LCD_Set_Block(26);
+			LCD_Void_Write_Number_2(Alarm_Hours);
+			LCD_Void_Write_String("?=");
+			LCD_Void_Write_Number_2(Alarm_Minutes);
+
+			if((Hours == Alarm_Hours)&&(Minutes == Alarm_Minutes))
+			{
+				Clock_Alarm();
+			}
+		}
 		if(xSemaphoreTake(LCD,10))
 		{
 			LCD_Set_Block(minutes_position);
@@ -277,7 +290,13 @@ void Clock_Typing_Enter(u8* take_lcd,u8* take_lach,u8* current_block)//what happ
 		KPD_Check_frequency = KPD_Check_frequency_Fast; // enter fast KPD checking freq
 	}
 }
+void Clock_Alarm(void)//what happens when there is an alarm
+{
+	LCD_Set_Block(24);
+	LCD_Void_Write_String("ALARM");
+	Clear_Bit(flags,alarm_set);
 
+}
 void Clock_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
@@ -312,8 +331,46 @@ void Clock_Typing_Mode(void *pvParameters)
 						Clock_Typing_Up_Arrow(&current_block);
 						break;
 
+					case 'A'://alarm adjusting
+						if(Get_Bit(flags,alarm_adjust) == 0)
+						{
+							Set_Bit(flags,alarm_adjust);
+							LCD_Set_Block(hours_position);
+							LCD_Void_Write_Number_2(0);
+							LCD_Set_Block(minutes_position-1);
+							LCD_Void_Write_Data(':');
+							LCD_Void_Write_Number_2(0);
+							LCD_Set_Block(Am_PM_position);
+							LCD_Void_Write_String("AM");
+							//LCD_Set_Block(23);
+							//LCD_Void_Write_String("Set Alarm");
+						}
+						else
+						{
+							LCD_Void_Clear();
+							Clear_Bit(flags,alarm_adjust);
+							Clock_Print_Default_Interface();
+
+						}
+						break;
 					default:
-						Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Hours,&Minutes);
+
+						if(Get_Bit(flags,alarm_adjust) == 0)
+						{
+							Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Hours,&Minutes);
+						}
+						else
+						{
+							Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
+							if(time_adjusted == 1)
+							{
+								Set_Bit(flags,alarm_set);
+							}
+							else
+							{
+								Clear_Bit(flags,alarm_set);
+							}
+						}
 						break;
 
 					}
