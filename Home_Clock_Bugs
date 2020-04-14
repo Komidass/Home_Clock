@@ -1,0 +1,7 @@
+Bugs:
+*setting an alarm will create a new hours and minutes task
+
+*alarm does not hang quits right away
+
+
+
