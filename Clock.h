@@ -30,10 +30,11 @@
 #define AM 0
 #define PM 1
 
+//flags
 #define alarm_set 0 // alarm is set
 #define alarm_adjust 1 // enter alarm adjusting mode
 #define alarm_text_toggle 2//to toggle the alarm string text
-
+#define alarm_latch 3
 //what happens every second
 void Clock_Second(void *pvParameters);
 //what happens every minute

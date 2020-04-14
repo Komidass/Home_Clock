@@ -341,22 +341,32 @@ void Clock_Print_Alarm_Interface(void)
 
 void Clock_Alarm(void)//what happens when there is an alarm
 {
-	Toggle_Bit(flags,alarm_text_toggle);
-	if(Get_Bit(flags,alarm_set) == 1)//if an alarm is set
-	{
-		if(xSemaphoreTake(LCD,10))
-		{
-			Clock_Print_Alarm_Interface();
-		}
-	}
-	else
-	{
-		Clock_Print_Default_Interface();
-		xSemaphoreGive(LCD);
-		vTaskDelete(Alarm_handle);
-	}
-	vTaskDelay(seconds_frequency/2);
 
+	if(xSemaphoreTake(LCD,10))
+	{
+		Clock_Print_Alarm_Interface();
+		Set_Bit(flags,alarm_latch);
+	}
+	while(1)
+	{
+
+		Toggle_Bit(flags,alarm_text_toggle);
+		if(Get_Bit(flags,alarm_set) == 1)//if an alarm is set
+		{
+			if(Get_Bit(flags,alarm_latch) == 1)
+			{
+				Clock_Print_Alarm_Interface();
+			}
+		}
+		else
+		{
+			Clock_Print_Default_Interface();
+			xSemaphoreGive(LCD);
+			Clear_Bit(flags,alarm_latch);
+			vTaskDelete(Alarm_handle);
+		}
+		vTaskDelay(seconds_frequency);
+	}
 }
 void Clock_Typing_Mode(void *pvParameters)
 {
@@ -365,6 +375,7 @@ void Clock_Typing_Mode(void *pvParameters)
 	u8 current_block = second_row_start;
 	u8 take_lcd = 0;//to latch taking LCD
 	u8 time_adjusted = 0;//checks if the time has been adjusted
+	u8 alarm_adjusted = 0;
 	while(1)
 	{
 		if(xQueueReceive(KPD_input,&pressed,10))
@@ -404,16 +415,13 @@ void Clock_Typing_Mode(void *pvParameters)
 						//in alarm setting mode
 						else
 						{
-							Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
+							Clock_Typing_Number(&pressed,&alarm_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
 							//alarm is set
-							if(time_adjusted == 1)
+							if(alarm_adjusted == 1)
 							{
 								Set_Bit(flags,alarm_set);
 							}
-							else
-							{
-								Clear_Bit(flags,alarm_set);
-							}
+							alarm_adjusted = 0;
 						}
 						break;
 
