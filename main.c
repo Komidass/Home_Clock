@@ -26,8 +26,8 @@ int main(void)
 	Clock_Print_Default_Interface();
 	KBD_u8Initialize(GROUP_B);
 	xTaskCreate(Clock_Second,"seconds",70,NULL,2,NULL);
-	xTaskCreate(Clock_Check_KPD,"KPD_check",70,NULL,2,NULL);
-	xTaskCreate(Clock_Typing_Mode,"Enter typing mode",50,NULL,2,NULL);
+	xTaskCreate(Clock_Check_KPD,"KPD_check",60,NULL,2,NULL);
+	xTaskCreate(Clock_Typing_Mode,"Enter typing mode",60,NULL,2,NULL);
 	vTaskStartScheduler();
 
 	/*while(1)

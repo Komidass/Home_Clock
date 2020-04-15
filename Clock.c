@@ -23,7 +23,7 @@ u8 Hours = 0;
 u8 AM_PM = AM;
 u8 Alarm_Minutes = 0;
 u8 Alarm_Hours = 0;
-u8 Alarm_AM_PM = 0;
+u8 Alarm_AM_PM = AM;
 u8 flags = 0;
 u8 KPD_Check_frequency = KPD_Check_frequency_Slow;
 SemaphoreHandle_t LCD ;
@@ -82,10 +82,16 @@ void Clock_Minute(void *pvParameters)
 	{
 		if(Get_Bit(flags,alarm_set) == 1)//alarm is set
 		{
-			if((Hours == Alarm_Hours)&&(Minutes == Alarm_Minutes))
+			if((Hours == Alarm_Hours)&&(Minutes == Alarm_Minutes)&&(AM_PM == Alarm_AM_PM))
 			{
 				xTaskCreate(Clock_Alarm,"Alarm",50,NULL,4,&Alarm_handle);
+
 			}
+
+		}
+		else
+		{
+
 		}
 		if(xSemaphoreTake(LCD,10))
 		{
@@ -190,15 +196,15 @@ void Clock_Typing_Left_Arrow(u8* current_block)//what happens when left arrow is
 	LCD_Void_Write_Data(Pixel_Arrow);
 }
 
-void Clock_Typing_Up_Arrow(u8* current_block)// what happens when up arrrow is pressed in typing mode
+void Clock_Typing_Up_Arrow(u8* current_block,u8* am_pm)// what happens when up arrrow is pressed in typing mode
 {
 	if(*current_block == Am_PM_position + second_row_start)
 	{
 		/* if on the AM_Pm pos pressing the up arrow changes between AM and PM*/
-		AM_PM++;
-		AM_PM %= 2;
+		*am_pm += 1;
+		*am_pm %= 2;
 		LCD_Set_Block(Am_PM_position);
-		if(AM_PM == AM) LCD_Void_Write_String("AM");
+		if(*am_pm == AM) LCD_Void_Write_String("AM");
 		else LCD_Void_Write_String("PM");
 		LCD_Set_Block(*current_block);
 		LCD_Void_Write_Data(Pixel_Arrow);
@@ -219,7 +225,8 @@ void Clock_Typing_Alarm_Button(void)
 		LCD_Void_Write_Data(':');
 		LCD_Void_Write_Number_2(0);
 		LCD_Set_Block(Am_PM_position);
-		LCD_Void_Write_String("AM");
+		if(Alarm_AM_PM == AM) LCD_Void_Write_String("AM");
+		else LCD_Void_Write_String("PM");
 		LCD_Set_Block(Set_Alarm_Position);
 		LCD_Void_Write_String("Set Alarm");
 	}
@@ -295,7 +302,7 @@ void Clock_Typing_Exit(u8* take_lcd,u8* take_lach,u8* time_adjusted,u8* current_
 			vTaskDelete(Minutes_handle);
 			Minutes_handle = NULL;
 		}
-		xTaskCreate(Clock_Minute,"minutes",70,NULL,2,&Minutes_handle);
+		xTaskCreate(Clock_Minute,"minutes",75,NULL,2,&Minutes_handle);
 
 		if(Hours_handle != NULL)
 		{
@@ -303,9 +310,10 @@ void Clock_Typing_Exit(u8* take_lcd,u8* take_lach,u8* time_adjusted,u8* current_
 			Hours_handle = NULL;
 		}
 		*time_adjusted = 0;
+		Seconds = 0;
 	}
 
-	xTaskCreate(Clock_Hours,"hours",70,NULL,2,Hours_handle);
+	xTaskCreate(Clock_Hours,"hours",70,NULL,3,Hours_handle);
 
 
 }
@@ -400,10 +408,19 @@ void Clock_Typing_Mode(void *pvParameters)
 						break;
 
 					case Up_Arrow:
-						Clock_Typing_Up_Arrow(&current_block);
+						//in time adjusting mode
+						if(Get_Bit(flags,alarm_adjust) == 0)
+						{
+							Clock_Typing_Up_Arrow(&current_block,&AM_PM);
+						}
+						//in alarm setting mode
+						else
+						{
+							Clock_Typing_Up_Arrow(&current_block,&Alarm_AM_PM);
+						}
 						break;
 
-					case 'A'://alarm adjusting
+					case 'A'://in alarm setting mode
 						Clock_Typing_Alarm_Button();
 						break;
 					default:
@@ -447,6 +464,7 @@ void Clock_Typing_Mode(void *pvParameters)
 			case 'v'://pressing the alarm button any time or at the alarm firing will cancel the alarm or close it
 				if(Get_Bit(flags,alarm_set) == 1)
 				{
+					Alarm_AM_PM = AM;
 					Clear_Bit(flags,alarm_set);
 				}
 				break;

@@ -35,12 +35,14 @@
 #define alarm_adjust 1 // enter alarm adjusting mode
 #define alarm_text_toggle 2//to toggle the alarm string text
 #define alarm_latch 3
+
 //what happens every second
 void Clock_Second(void *pvParameters);
 //what happens every minute
 void Clock_Minute(void *pvParameters);
 //what happens every hour
 void Clock_Hours(void *pvParameters);
+
 void Clock_Check_KPD(void *pvParameters);
 //what happens in the typing mode
 void Clock_Typing_Mode(void *pvParameters);
@@ -51,7 +53,7 @@ void Clock_Typing_Right_Arrow(u8* current_block);
 //what happens when the left arrow is pressed in typing mode
 void Clock_Typing_Left_Arrow(u8* current_block);
 //what happens when the up arrow is pressed in typing mode
-void Clock_Typing_Up_Arrow(u8* current_block);
+void Clock_Typing_Up_Arrow(u8* current_block,u8* am_pm);
 //what happens when an number is pressed in typing mode
 void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hours,u8* minutes);
 //what happens when you press the alarm button
