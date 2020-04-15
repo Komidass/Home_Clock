@@ -25,13 +25,14 @@ u8 Alarm_Minutes = 0;
 u8 Alarm_Hours = 0;
 u8 Alarm_AM_PM = AM;
 u8 flags = 0;
-u8 KPD_Check_frequency = KPD_Check_frequency_Slow;
-SemaphoreHandle_t LCD ;
-xQueueHandle KPD_input = NULL;
-xQueueHandle minutes_adjusted = NULL; //for adjusted minutes to add in the hours
+u8 current_block = second_row_start;
+u8 time_adjusted = 0;//checks if the time has been adjusted
+xSemaphoreHandle LCD ;
+xSemaphoreHandle KPD_INT_Sem;
 TaskHandle_t Minutes_handle = NULL;
 TaskHandle_t Hours_handle = NULL;
 TaskHandle_t Alarm_handle = NULL;
+TaskHandle_t KPD_handle = NULL;
 
 void Clock_Print_Default_Interface(void)
 {
@@ -54,7 +55,7 @@ void Clock_Print_Default_Interface(void)
 
 void Clock_Second(void *pvParameters)
 {
-	LCD = xSemaphoreCreateMutex();
+
 	TickType_t MyLastUnblockS;
 	MyLastUnblockS = xTaskGetTickCount();
 	while(1)
@@ -142,23 +143,6 @@ void Clock_Hours(void *pvParameters)
 	}
 }
 
-void Clock_Check_KPD(void *pvParameters)
-{
-	KPD_input = xQueueCreate(1,sizeof(u8));
-	TickType_t MyLastUnblockKPD;
-	MyLastUnblockKPD = xTaskGetTickCount();
-	u8 keys[16];
-	u8 pressed;
-	while(1)
-	{	pressed = KBD_u8GetKeyPadState(keys);
-		if(pressed != 0xff)
-		{
-			xQueueSend(KPD_input,&pressed,10);
-		}
-
-		vTaskDelayUntil(&MyLastUnblockKPD,KPD_Check_frequency);
-	}
-}
 
 void Clock_Typing_Right_Arrow(u8* current_block)//what happens when right arrow is pressed in typing mode
 {
@@ -283,18 +267,14 @@ void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hou
 	LCD_Void_Write_Data(Pixel_Arrow);
 }
 
-void Clock_Typing_Exit(u8* take_lcd,u8* take_lach,u8* time_adjusted,u8* current_block)//what happens when you exit typing mode
+void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when you exit typing mode
 {
 	xSemaphoreGive(LCD);
 	LCD_Set_Block(second_row_start);
-	*take_lach = 0;
 	Clock_Print_Default_Interface();//print default interface after giving back the LCD
-	KPD_Check_frequency = KPD_Check_frequency_Slow;//change KPD check freq to slow
 	LCD_Set_Block(*current_block);
 	LCD_Void_Write_Data(' ');
-	vTaskDelay(configTICK_RATE_HZ);//to avoid quick taking and giving the LCD
-	*take_lcd += 1;
-
+	current_block = second_row_start;
 	if(*time_adjusted)
 	{
 		if(Minutes_handle != NULL)
@@ -313,21 +293,18 @@ void Clock_Typing_Exit(u8* take_lcd,u8* take_lach,u8* time_adjusted,u8* current_
 		Seconds = 0;
 	}
 
-	xTaskCreate(Clock_Hours,"hours",70,NULL,3,Hours_handle);
+	xTaskCreate(Clock_Hours,"hours",70,NULL,3,&Hours_handle);
 
 
 }
 
-void Clock_Typing_Enter(u8* take_lcd,u8* take_lach,u8* current_block)//what happens when you enter typing mode
+void Clock_Typing_Enter(u8* current_block)//what happens when you enter typing mode
 {
 	if(xSemaphoreTake(LCD,10))
 	{
 		*current_block = second_row_start; //when taking the LCD set the cursor to the 2nd row
-		*take_lach = 1;
 		LCD_Set_Block(*current_block);
 		LCD_Void_Write_Data(Pixel_Arrow);
-		*take_lcd += 1;
-		KPD_Check_frequency = KPD_Check_frequency_Fast; // enter fast KPD checking freq
 	}
 }
 
@@ -379,103 +356,109 @@ void Clock_Alarm(void)//what happens when there is an alarm
 void Clock_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
-	u8 take_lach = 0;//to latch entering any key other the the LCD taking key if the entering key is not pressed continue the loop
-	u8 current_block = second_row_start;
-	u8 take_lcd = 0;//to latch taking LCD
-	u8 time_adjusted = 0;//checks if the time has been adjusted
+	u8 keys[16];
 	u8 alarm_adjusted = 0;
 	while(1)
 	{
-		if(xQueueReceive(KPD_input,&pressed,10))
+		pressed = KBD_u8GetKeyPadState(keys);
+		if(pressed != 0xff)
 		{
+			/* Set to the current block and clear the last cursor*/
+			LCD_Set_Block(current_block);
+			LCD_Void_Write_Data(' ');
 			switch (pressed)
 			{
-			default:
-				if((take_lach))
-				{
-					/* Set to the current block and clear the last cursor*/
-					LCD_Set_Block(current_block);
-					LCD_Void_Write_Data(' ');
-
-
-					switch (pressed)
-					{
-					case '>':
-						Clock_Typing_Right_Arrow(&current_block);
-						break;
-					case '<':
-						Clock_Typing_Left_Arrow(&current_block);
-						break;
-
-					case Up_Arrow:
-						//in time adjusting mode
-						if(Get_Bit(flags,alarm_adjust) == 0)
-						{
-							Clock_Typing_Up_Arrow(&current_block,&AM_PM);
-						}
-						//in alarm setting mode
-						else
-						{
-							Clock_Typing_Up_Arrow(&current_block,&Alarm_AM_PM);
-						}
-						break;
-
-					case 'A'://in alarm setting mode
-						Clock_Typing_Alarm_Button();
-						break;
-					default:
-						//in time adjusting mode
-						if(Get_Bit(flags,alarm_adjust) == 0)
-						{
-							Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Hours,&Minutes);
-						}
-						//in alarm setting mode
-						else
-						{
-							Clock_Typing_Number(&pressed,&alarm_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
-							//alarm is set
-							if(alarm_adjusted == 1)
-							{
-								Set_Bit(flags,alarm_set);
-							}
-							alarm_adjusted = 0;
-						}
-						break;
-
-					}
-
-					vTaskDelay(3);
-					continue;
-				}
-
+			case '>':
+				Clock_Typing_Right_Arrow(&current_block);
+				break;
+			case '<':
+				Clock_Typing_Left_Arrow(&current_block);
 				break;
 
-
-			case '*':
-				if((take_lcd%2)==0)
+			case Up_Arrow:
+				//in time adjusting mode
+				if(Get_Bit(flags,alarm_adjust) == 0)
 				{
-					Clock_Typing_Enter(&take_lcd,&take_lach,&current_block);
+					Clock_Typing_Up_Arrow(&current_block,&AM_PM);
 				}
+				//in alarm setting mode
 				else
 				{
-					Clock_Typing_Exit(&take_lcd,&take_lach,&time_adjusted,&current_block);
+					Clock_Typing_Up_Arrow(&current_block,&Alarm_AM_PM);
 				}
 				break;
-			case 'v'://pressing the alarm button any time or at the alarm firing will cancel the alarm or close it
-				if(Get_Bit(flags,alarm_set) == 1)
+
+			case 'A'://in alarm setting mode
+				Clock_Typing_Alarm_Button();
+				break;
+			default:
+				//in time adjusting mode
+				if(Get_Bit(flags,alarm_adjust) == 0)
 				{
-					Alarm_AM_PM = AM;
-					Clear_Bit(flags,alarm_set);
+					Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Hours,&Minutes);
+				}
+				//in alarm setting mode
+				else
+				{
+					Clock_Typing_Number(&pressed,&alarm_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
+					//alarm is set
+					if(alarm_adjusted == 1)
+					{
+						Set_Bit(flags,alarm_set);
+					}
+					alarm_adjusted = 0;
 				}
 				break;
+
 			}
-
 		}
-
+		vTaskDelay(KPD_Check_frequency);
 	}
+
 }
 
+void KPD_Button_INT(void)
+{
 
+	xSemaphoreGiveFromISR(KPD_INT_Sem,NULL);
+
+}
+
+void Clock_Semaphore_Init(void)
+{
+	LCD = xSemaphoreCreateMutex();
+	vSemaphoreCreateBinary(KPD_INT_Sem);
+}
+
+void KPD_Button_INT_ISR(void)
+{
+	while(1)
+	{
+		if(xSemaphoreTake(KPD_INT_Sem,9999))
+		{
+			Toggle_Bit(flags,KPD_flag);
+			if(Get_Bit(flags,KPD_flag) == 0)
+			{
+				DIO_u8SetPinValue(C7,1);
+				Clock_Typing_Enter(&current_block);
+				if(KPD_handle == NULL)
+				{
+					xTaskCreate(Clock_Typing_Mode,"KPD",80,NULL,5,&KPD_handle);
+				}
+
+			}
+			else
+			{
+				DIO_u8SetPinValue(C7,0);
+				if(KPD_handle != NULL)
+				{
+					vTaskDelete(KPD_handle);
+				}
+				Clock_Typing_Exit(&time_adjusted,&current_block);
+			}
+		}
+	}
+}
 
 
 

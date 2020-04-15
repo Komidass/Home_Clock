@@ -6,6 +6,7 @@
 C_SRCS += \
 ../Clock.c \
 ../DIO_Program.c \
+../EXTI_program.c \
 ../KBD_program.c \
 ../LCD_program.c \
 ../croutine.c \
@@ -21,6 +22,7 @@ C_SRCS += \
 OBJS += \
 ./Clock.o \
 ./DIO_Program.o \
+./EXTI_program.o \
 ./KBD_program.o \
 ./LCD_program.o \
 ./croutine.o \
@@ -36,6 +38,7 @@ OBJS += \
 C_DEPS += \
 ./Clock.d \
 ./DIO_Program.d \
+./EXTI_program.d \
 ./KBD_program.d \
 ./LCD_program.d \
 ./croutine.d \

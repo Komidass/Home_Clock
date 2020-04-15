@@ -137,7 +137,7 @@ void KBD_u8Initialize(u8 group_nb) //initialize keypad active col pull up with R
 			DIO_u8SetPinValue(A7,1);
 			for (int i=0;i<4;i++)
 			{
-				KBD_Au8RowsPins[i] = A4 + i;
+				KBD_Au8RowsPins[i] = A7 - i;
 				KBD_Au8ColsPins[i] = A3 - i;
 			}
 			break;
@@ -149,7 +149,7 @@ void KBD_u8Initialize(u8 group_nb) //initialize keypad active col pull up with R
 			DIO_u8SetPinValue(B7,1);
 			for (int i=0;i<4;i++)
 			{
-				KBD_Au8RowsPins[i] = B4 + i;
+				KBD_Au8RowsPins[i] = B7 - i;
 				KBD_Au8ColsPins[i] = B3 - i;
 			}
 			break;
@@ -161,7 +161,7 @@ void KBD_u8Initialize(u8 group_nb) //initialize keypad active col pull up with R
 			DIO_u8SetPinValue(C7,1);
 			for (int i=0;i<4;i++)
 			{
-				KBD_Au8RowsPins[i] = C4 + i;
+				KBD_Au8RowsPins[i] = C7 - i;
 				KBD_Au8ColsPins[i] = C3 - i;
 			}
 			break;
@@ -173,7 +173,7 @@ void KBD_u8Initialize(u8 group_nb) //initialize keypad active col pull up with R
 			DIO_u8SetPinValue(D7,1);
 			for (int i=0;i<4;i++)
 			{
-				KBD_Au8RowsPins[i] = D4 + i;
+				KBD_Au8RowsPins[i] = D7 - i;
 				KBD_Au8ColsPins[i] = D3 - i;
 			}
 			break;

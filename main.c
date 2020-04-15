@@ -5,7 +5,7 @@
  *      Author: tho
  */
 #define F_CPU	8000000
-#include "avr/delay.h"
+//#include "avr/delay.h"
 #include "BIT_CALC.h"
 #include "STD_Types.h"
 #include "DIO_Interface.h"
@@ -15,8 +15,8 @@
 #include "Clock.h"
 #include "queue.h"
 #include "semphr.h"
-#include "avr/sleep.h"
 #include "KBD_interface.h"
+#include "EXTI_interface.h"
 
 
 int main(void)
@@ -25,15 +25,19 @@ int main(void)
 	LCD_Void_Clear();
 	Clock_Print_Default_Interface();
 	KBD_u8Initialize(GROUP_B);
+	Clock_Semaphore_Init();
+	voidSetCallBack(INT_0,KPD_Button_INT);
+	DIO_u8SetPinDirection(D2,DIO_u8_INPUT);
+	DIO_u8SetPinValue(D2,1);
+	DIO_u8SetPinDirection(C7,DIO_u8_OUTPUT);
+	Interrupt_Set_Level(INT_0,INTERRUPT_LEVEL_RISING_EDGE);
+	Interrupt_Initialize();
+	Interrupt_Enable(INT_0);
 	xTaskCreate(Clock_Second,"seconds",70,NULL,2,NULL);
-	xTaskCreate(Clock_Check_KPD,"KPD_check",60,NULL,2,NULL);
-	xTaskCreate(Clock_Typing_Mode,"Enter typing mode",60,NULL,2,NULL);
+	xTaskCreate(KPD_Button_INT_ISR,"KPD_Button_ISR",50,NULL,2,NULL);
+
 	vTaskStartScheduler();
 
-	/*while(1)
-	{
-
-	}*/
 	return 0;
 }
 

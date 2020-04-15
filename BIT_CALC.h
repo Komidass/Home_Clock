@@ -12,5 +12,14 @@
 #define Assign_Bit(Var,Bit_No,Value) do{if(Value == 1) Set_Bit(Var,Bit_No); \
 										else Clear_Bit(Var,Bit_No);}while(0)
 
+#define ASSIGN_2BITS(Var,Bit_No,Value) do{if(Value == 0b00) {Clear_Bit(Var,Bit_No*2);\
+                                                             Clear_Bit(Var,Bit_No*2+1);}\
+                                        else if(Value == 0b11) {Set_Bit(Var,Bit_No*2);\
+                                                                Set_Bit(Var,Bit_No*2+1);}\
+                                        else if(Value == 0b10) {Clear_Bit(Var,Bit_No*2);\
+                                                                Set_Bit(Var,Bit_No*2+1);}\
+                                        else if(Value == 0b01) {Set_Bit(Var,Bit_No*2);\
+                                                                Clear_Bit(Var,Bit_No*2+1);}}while(0)
+
 
 #endif
