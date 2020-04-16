@@ -58,7 +58,7 @@
 #define configUSE_TIMERS 1 //1 if you want to use timers
 #define configTIMER_TASK_PRIORITY 4 //between 0 and max priorities -1
 #define configTIMER_QUEUE_LENGTH  40// this sets the maximum number of unprocessed commands that the timer command queue can hold at any one time
-#define configTIMER_TASK_STACK_DEPTH  50//size of stack in words to timer service task
+#define configTIMER_TASK_STACK_DEPTH  85//size of stack in words to timer service task
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0

@@ -71,7 +71,7 @@ void Clock_Second(void *pvParameters)
 			LCD_Void_Write_Number_2(Seconds);
 			xSemaphoreGive(LCD);
 		}
-		LCD_Set_Block(25);
+	/*	LCD_Set_Block(25);
 		LCD_Void_Write_Number_2(count_once);
 		LCD_Void_Write_Data(' ');
 		LCD_Void_Write_Number_2(count_twice);
@@ -84,7 +84,7 @@ void Clock_Second(void *pvParameters)
 		{
 			LCD_Void_Write_Data('1');
 		}
-
+*/
 
 		vTaskDelayUntil(&MyLastUnblockS,seconds_frequency);
 		Seconds++;
@@ -446,13 +446,13 @@ void SignlePress( TimerHandle_t xTimer )
 {
 	count_once++;
 	DIO_u8SetPinValue(C7,0);
-	if(Get_Bit(flags,KPD_flag) == 0)
+	if((Get_Bit(flags,KPD_flag) == 0)&&(Get_Bit(flags,KPD_alarm_flag) == 0))
 	{
 		Clock_Typing_Enter(&current_block);
 		vTaskResume(KPD_handle);
 
 	}
-	else
+	else if (Get_Bit(flags,KPD_alarm_flag) == 0)
 	{
 
 		Clock_Typing_Exit(&current_block);
@@ -501,8 +501,6 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 				count_twice++;
 				xTimerStop(KPD_INT_Timer,10);
 				DIO_u8SetPinValue(C7,1);
-				count_once++;
-				DIO_u8SetPinValue(C7,0);
 				/*
 				 * if an alarm is set double pressing will cancel/stop the current alarm that is set/firing
 				 */
@@ -510,13 +508,13 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 				{
 					Clear_Bit(flags,alarm_set);
 				}
-				else if(Get_Bit(flags,KPD_alarm_flag) == 0)
+				else if((Get_Bit(flags,KPD_alarm_flag) == 0)&&(Get_Bit(flags,KPD_flag) == 0))
 				{
 					Clock_Alarm_Enter();
 					vTaskResume(KPD_handle);
 					Toggle_Bit(flags,KPD_alarm_flag);
 				}
-				else
+				else if(Get_Bit(flags,KPD_flag) == 0)
 				{
 					Clock_Alarm_Exit();
 					vTaskSuspend(KPD_handle);
