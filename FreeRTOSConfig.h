@@ -46,7 +46,7 @@
 #define configUSE_IDLE_HOOK			0
 #define configUSE_TICK_HOOK			0
 #define configCPU_CLOCK_HZ			( ( unsigned long ) 8000000 )//crystal
-#define configTICK_RATE_HZ			( ( TickType_t ) 5 )//el tick kol ad eh
+#define configTICK_RATE_HZ			( ( TickType_t ) 18 )//el tick kol ad eh
 #define configMAX_PRIORITIES		( 5 )// akbr rkam priority
 #define configMINIMAL_STACK_SIZE	( ( unsigned short ) 85 )//asghr 7agm el task eli bt7gzo el TCB ,85 di WORD
 #define configTOTAL_HEAP_SIZE		( (size_t ) ( 1500 ) )// max size of task in bytes
@@ -55,6 +55,10 @@
 #define configUSE_16_BIT_TICKS		1 // if 1 use 16 bit timer , if 0 use 32 bit timer (msh fel avr bt3na)
 #define configIDLE_SHOULD_YIELD		1
 #define configQUEUE_REGISTRY_SIZE	0
+#define configUSE_TIMERS 1 //1 if you want to use timers
+#define configTIMER_TASK_PRIORITY 4 //between 0 and max priorities -1
+#define configTIMER_QUEUE_LENGTH  40// this sets the maximum number of unprocessed commands that the timer command queue can hold at any one time
+#define configTIMER_TASK_STACK_DEPTH  50//size of stack in words to timer service task
 
 /* Co-routine definitions. */
 #define configUSE_CO_ROUTINES 		0

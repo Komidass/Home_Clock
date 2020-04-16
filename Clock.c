@@ -15,8 +15,11 @@
 #include "queue.h"
 #include "semphr.h"
 #include "Clock.h"
+#include "timers.h"
 #include "KBD_interface.h"
 
+u8 count_once = 0;
+u8 count_twice = 0;
 u8 Seconds = 0;
 u8 Minutes = 0;
 u8 Hours = 0;
@@ -28,11 +31,13 @@ u8 flags = 0;
 u8 current_block = second_row_start;
 u8 time_adjusted = 0;//checks if the time has been adjusted
 xSemaphoreHandle LCD ;
-xSemaphoreHandle KPD_INT_Sem;
 TaskHandle_t Minutes_handle = NULL;
 TaskHandle_t Hours_handle = NULL;
 TaskHandle_t Alarm_handle = NULL;
 TaskHandle_t KPD_handle = NULL;
+TaskHandle_t KPD_handle_INT = NULL;
+TimerHandle_t KPD_INT_Timer;
+TimerHandle_t Debounce_Timer;
 
 void Clock_Print_Default_Interface(void)
 {
@@ -58,6 +63,7 @@ void Clock_Second(void *pvParameters)
 
 	TickType_t MyLastUnblockS;
 	MyLastUnblockS = xTaskGetTickCount();
+	u8 pin_value;
 	while(1)
 	{
 		if(xSemaphoreTake(LCD,10))
@@ -66,6 +72,20 @@ void Clock_Second(void *pvParameters)
 			LCD_Void_Write_Number_2(Seconds);
 			xSemaphoreGive(LCD);
 		}
+		LCD_Set_Block(25);
+		LCD_Void_Write_Number_2(count_once);
+		LCD_Void_Write_Data(' ');
+		LCD_Void_Write_Number_2(count_twice);
+		LCD_Void_Write_Data(' ');
+		if(xTimerIsTimerActive(KPD_INT_Timer) == pdFALSE)
+		{
+			LCD_Void_Write_Data('0');
+		}
+		else
+		{
+			LCD_Void_Write_Data('1');
+		}
+
 
 		vTaskDelayUntil(&MyLastUnblockS,seconds_frequency);
 		Seconds++;
@@ -85,7 +105,7 @@ void Clock_Minute(void *pvParameters)
 		{
 			if((Hours == Alarm_Hours)&&(Minutes == Alarm_Minutes)&&(AM_PM == Alarm_AM_PM))
 			{
-				xTaskCreate(Clock_Alarm,"Alarm",50,NULL,4,&Alarm_handle);
+				xTaskCreate(Clock_Alarm,"Alarm",stack_alarm,NULL,priority_alarm,&Alarm_handle);
 
 			}
 
@@ -195,35 +215,6 @@ void Clock_Typing_Up_Arrow(u8* current_block,u8* am_pm)// what happens when up a
 	}
 }
 
-void Clock_Typing_Alarm_Button(void)
-{
-	//entering alarm setting mode
-	if(Get_Bit(flags,alarm_adjust) == 0)
-	{
-		LCD_Set_Block(second_row_start);
-		LCD_Void_Write_Data(Pixel_Arrow);
-		Set_Bit(flags,alarm_adjust);
-		LCD_Set_Block(hours_position);
-		LCD_Void_Write_Number_2(0);
-		LCD_Set_Block(minutes_position-1);
-		LCD_Void_Write_Data(':');
-		LCD_Void_Write_Number_2(0);
-		LCD_Set_Block(Am_PM_position);
-		if(Alarm_AM_PM == AM) LCD_Void_Write_String("AM");
-		else LCD_Void_Write_String("PM");
-		LCD_Set_Block(Set_Alarm_Position);
-		LCD_Void_Write_String("Set Alarm");
-	}
-	//exiting alarm setting mode
-	else
-	{
-		LCD_Void_Clear();
-		Clear_Bit(flags,alarm_adjust);
-		Clock_Print_Default_Interface();
-
-	}
-}
-
 void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hours,u8* minutes)//what happens when a number is pressed in typing mode
 {
 	/*change the time according to the user input*/
@@ -282,7 +273,7 @@ void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when y
 			vTaskDelete(Minutes_handle);
 			Minutes_handle = NULL;
 		}
-		xTaskCreate(Clock_Minute,"minutes",75,NULL,2,&Minutes_handle);
+		xTaskCreate(Clock_Minute,"minutes",stack_minutes,NULL,priority_minutes,&Minutes_handle);
 
 		if(Hours_handle != NULL)
 		{
@@ -293,7 +284,7 @@ void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when y
 		Seconds = 0;
 	}
 
-	xTaskCreate(Clock_Hours,"hours",70,NULL,3,&Hours_handle);
+	xTaskCreate(Clock_Hours,"hours",stack_hours,NULL,priority_hours,&Hours_handle);
 
 
 }
@@ -308,6 +299,37 @@ void Clock_Typing_Enter(u8* current_block)//what happens when you enter typing m
 	}
 }
 
+void Clock_Alarm_Enter(void)
+{
+	if(xSemaphoreTake(LCD,10))
+	{
+		current_block = second_row_start;
+		LCD_Set_Block(current_block);
+		LCD_Void_Write_Data(Pixel_Arrow);
+		Set_Bit(flags,alarm_adjust);
+		LCD_Set_Block(hours_position);
+		LCD_Void_Write_Number_2(0);
+		LCD_Set_Block(minutes_position-1);
+		LCD_Void_Write_Data(':');
+		LCD_Void_Write_Number_2(0);
+		LCD_Set_Block(Am_PM_position);
+		if(Alarm_AM_PM == AM) LCD_Void_Write_String("AM");
+		else LCD_Void_Write_String("PM");
+		LCD_Set_Block(Set_Alarm_Position);
+		LCD_Void_Write_String("Set Alarm");
+	}
+
+}
+void Clock_Alarm_Exit(void)
+{
+	LCD_Void_Clear();
+	current_block = second_row_start;
+	LCD_Set_Block(current_block);
+	LCD_Void_Write_Data(Pixel_Arrow);
+	Clear_Bit(flags,alarm_adjust);
+	Clock_Print_Default_Interface();
+	xSemaphoreGive(LCD);
+}
 void Clock_Print_Alarm_Interface(void)
 {
 	LCD_Void_Clear();
@@ -387,10 +409,6 @@ void Clock_Typing_Mode(void *pvParameters)
 					Clock_Typing_Up_Arrow(&current_block,&Alarm_AM_PM);
 				}
 				break;
-
-			case 'A'://in alarm setting mode
-				Clock_Typing_Alarm_Button();
-				break;
 			default:
 				//in time adjusting mode
 				if(Get_Bit(flags,alarm_adjust) == 0)
@@ -420,46 +438,89 @@ void Clock_Typing_Mode(void *pvParameters)
 void KPD_Button_INT(void)
 {
 
-	xSemaphoreGiveFromISR(KPD_INT_Sem,NULL);
+	xTaskResumeFromISR(KPD_handle_INT);
+	taskYIELD();
 
 }
 
+void SignlePress( TimerHandle_t xTimer )
+{
+	count_once++;
+	DIO_u8SetPinValue(C7,0);
+	if(Get_Bit(flags,KPD_flag) == 0)
+	{
+		Clock_Typing_Enter(&current_block);
+		vTaskResume(KPD_handle);
+
+	}
+	else
+	{
+
+		Clock_Typing_Exit(&time_adjusted,&current_block);
+		vTaskSuspend(KPD_handle);
+	}
+	Toggle_Bit(flags,KPD_flag);
+}
+void Debounce( TimerHandle_t xTimer )
+{
+
+}
 void Clock_Semaphore_Init(void)
 {
 	LCD = xSemaphoreCreateMutex();
-	vSemaphoreCreateBinary(KPD_INT_Sem);
+	KPD_INT_Timer  = xTimerCreate("timer",KPD_INT_double_press_frequency,pdFALSE,(void *) 0,SignlePress);
+	Debounce_Timer = xTimerCreate("timer2",Debounce_frequency,pdFALSE,(void *) 1,Debounce);
+	xTaskCreate(Clock_Typing_Mode,"KPD",stack_kpd_typing_mode,NULL,priority_kpd_typing_mode,&KPD_handle);
+	xTaskCreate(KPD_Button_INT_ISR,"KPD_ISR1",stack_kpd_int,NULL,priority_kpd_int,&KPD_handle_INT);
+	vTaskSuspend(KPD_handle);
+
+
 }
 
-void KPD_Button_INT_ISR(void)
+void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 {
+
+
 	while(1)
 	{
-		if(xSemaphoreTake(KPD_INT_Sem,9999))
+		vTaskSuspend(NULL);//task suspend itself
+		if(xTimerIsTimerActive(Debounce_Timer) == pdFALSE)//for debounce effect
 		{
-			Toggle_Bit(flags,KPD_flag);
-			if(Get_Bit(flags,KPD_flag) == 0)
+			xTimerReset(Debounce_Timer,10);
+			/*
+			 * single press , function is the timer function
+			 */
+			if(xTimerIsTimerActive(KPD_INT_Timer) == pdFALSE)
 			{
-				DIO_u8SetPinValue(C7,1);
-				Clock_Typing_Enter(&current_block);
-				if(KPD_handle == NULL)
-				{
-					xTaskCreate(Clock_Typing_Mode,"KPD",80,NULL,5,&KPD_handle);
-				}
-
+				xTimerReset(KPD_INT_Timer,10);
 			}
+			/*
+			 * double press
+			 */
 			else
 			{
+				count_twice++;
+				xTimerStop(KPD_INT_Timer,10);
+				DIO_u8SetPinValue(C7,1);
+				count_once++;
 				DIO_u8SetPinValue(C7,0);
-				if(KPD_handle != NULL)
+				if(Get_Bit(flags,KPD_alarm_flag) == 0)
 				{
-					vTaskDelete(KPD_handle);
+					Clock_Alarm_Enter();
+					vTaskResume(KPD_handle);
 				}
-				Clock_Typing_Exit(&time_adjusted,&current_block);
+				else
+				{
+					Clock_Alarm_Exit();
+					vTaskSuspend(KPD_handle);
+				}
+				Toggle_Bit(flags,KPD_alarm_flag);
+
 			}
 		}
+
+
 	}
 }
-
-
 
 

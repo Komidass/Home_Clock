@@ -18,7 +18,6 @@
 #include "KBD_interface.h"
 #include "EXTI_interface.h"
 
-
 int main(void)
 {
 	LCD_initialize();
@@ -33,8 +32,7 @@ int main(void)
 	Interrupt_Set_Level(INT_0,INTERRUPT_LEVEL_RISING_EDGE);
 	Interrupt_Initialize();
 	Interrupt_Enable(INT_0);
-	xTaskCreate(Clock_Second,"seconds",70,NULL,2,NULL);
-	xTaskCreate(KPD_Button_INT_ISR,"KPD_Button_ISR",50,NULL,2,NULL);
+	xTaskCreate(Clock_Second,"seconds",stack_seconds,NULL,2,NULL);
 
 	vTaskStartScheduler();
 
