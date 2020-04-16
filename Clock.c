@@ -27,9 +27,8 @@ u8 AM_PM = AM;
 u8 Alarm_Minutes = 0;
 u8 Alarm_Hours = 0;
 u8 Alarm_AM_PM = AM;
-u8 flags = 0;
+u16 flags = 0;
 u8 current_block = second_row_start;
-u8 time_adjusted = 0;//checks if the time has been adjusted
 xSemaphoreHandle LCD ;
 TaskHandle_t Minutes_handle = NULL;
 TaskHandle_t Hours_handle = NULL;
@@ -215,26 +214,26 @@ void Clock_Typing_Up_Arrow(u8* current_block,u8* am_pm)// what happens when up a
 	}
 }
 
-void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hours,u8* minutes)//what happens when a number is pressed in typing mode
+void Clock_Typing_Number(u8* pressed,u8 time_adjusted,u8* current_block,u8* hours,u8* minutes)//what happens when a number is pressed in typing mode
 {
 	/*change the time according to the user input*/
 	switch (*current_block)
 			{
 			case hours_position+16:
 				*hours = ((*pressed-'0')*10)+(*hours%10);
-				*time_adjusted = 1;
+				Set_Bit(flags,time_adjusted);
 				break;
 			case hours_position+17:
 				*hours = (*pressed-1-'0')+((*hours/10)*10);
-				*time_adjusted = 1;
+				Set_Bit(flags,time_adjusted);
 				break;
 			case minutes_position+16:
 				*minutes = ((*pressed-'0')*10)+(*minutes%10);
-				*time_adjusted = 1;
+				Set_Bit(flags,time_adjusted);
 				break;
 			case minutes_position+17:
 				*minutes = (*pressed-'0')+((*minutes/10)*10);
-				*time_adjusted = 1;
+				Set_Bit(flags,time_adjusted);
 				break;
 			}
 
@@ -258,7 +257,7 @@ void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hou
 	LCD_Void_Write_Data(Pixel_Arrow);
 }
 
-void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when you exit typing mode
+void Clock_Typing_Exit(u8* current_block)//what happens when you exit typing mode
 {
 	xSemaphoreGive(LCD);
 	LCD_Set_Block(second_row_start);
@@ -266,7 +265,7 @@ void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when y
 	LCD_Set_Block(*current_block);
 	LCD_Void_Write_Data(' ');
 	current_block = second_row_start;
-	if(*time_adjusted)
+	if(Get_Bit(flags,time_adjusted_flag) == 1)
 	{
 		if(Minutes_handle != NULL)
 		{
@@ -280,7 +279,7 @@ void Clock_Typing_Exit(u8* time_adjusted,u8* current_block)//what happens when y
 			vTaskDelete(Hours_handle);
 			Hours_handle = NULL;
 		}
-		*time_adjusted = 0;
+		Clear_Bit(flags,time_adjusted_flag);
 		Seconds = 0;
 	}
 
@@ -322,6 +321,12 @@ void Clock_Alarm_Enter(void)
 }
 void Clock_Alarm_Exit(void)
 {
+	//alarm is set
+	if(Get_Bit(flags,alarm_adjusted_flag) == 1)
+	{
+		Set_Bit(flags,alarm_set);
+	}
+	Clear_Bit(flags,alarm_adjusted_flag);
 	LCD_Void_Clear();
 	current_block = second_row_start;
 	LCD_Set_Block(current_block);
@@ -379,7 +384,6 @@ void Clock_Typing_Mode(void *pvParameters)
 {
 	u8 pressed  = 0xff;
 	u8 keys[16];
-	u8 alarm_adjusted = 0;
 	while(1)
 	{
 		pressed = KBD_u8GetKeyPadState(keys);
@@ -413,18 +417,13 @@ void Clock_Typing_Mode(void *pvParameters)
 				//in time adjusting mode
 				if(Get_Bit(flags,alarm_adjust) == 0)
 				{
-					Clock_Typing_Number(&pressed,&time_adjusted,&current_block,&Hours,&Minutes);
+					Clock_Typing_Number(&pressed,time_adjusted_flag,&current_block,&Hours,&Minutes);
 				}
 				//in alarm setting mode
 				else
 				{
-					Clock_Typing_Number(&pressed,&alarm_adjusted,&current_block,&Alarm_Hours,&Alarm_Minutes);
-					//alarm is set
-					if(alarm_adjusted == 1)
-					{
-						Set_Bit(flags,alarm_set);
-					}
-					alarm_adjusted = 0;
+					Clock_Typing_Number(&pressed,alarm_adjusted_flag,&current_block,&Alarm_Hours,&Alarm_Minutes);
+
 				}
 				break;
 
@@ -456,7 +455,7 @@ void SignlePress( TimerHandle_t xTimer )
 	else
 	{
 
-		Clock_Typing_Exit(&time_adjusted,&current_block);
+		Clock_Typing_Exit(&current_block);
 		vTaskSuspend(KPD_handle);
 	}
 	Toggle_Bit(flags,KPD_flag);
@@ -504,17 +503,26 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 				DIO_u8SetPinValue(C7,1);
 				count_once++;
 				DIO_u8SetPinValue(C7,0);
-				if(Get_Bit(flags,KPD_alarm_flag) == 0)
+				/*
+				 * if an alarm is set double pressing will cancel/stop the current alarm that is set/firing
+				 */
+				if (Get_Bit(flags,alarm_set) == 1)
+				{
+					Clear_Bit(flags,alarm_set);
+				}
+				else if(Get_Bit(flags,KPD_alarm_flag) == 0)
 				{
 					Clock_Alarm_Enter();
 					vTaskResume(KPD_handle);
+					Toggle_Bit(flags,KPD_alarm_flag);
 				}
 				else
 				{
 					Clock_Alarm_Exit();
 					vTaskSuspend(KPD_handle);
+					Toggle_Bit(flags,KPD_alarm_flag);
 				}
-				Toggle_Bit(flags,KPD_alarm_flag);
+
 
 			}
 		}

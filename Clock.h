@@ -40,6 +40,8 @@
 #define timer_ended_flag 5
 #define LED_toggle 6
 #define KPD_alarm_flag 7
+#define time_adjusted_flag 8
+#define alarm_adjusted_flag 9
 
 /*
  * stack sizes of tasks
@@ -97,12 +99,12 @@ void Clock_Typing_Up_Arrow(u8* current_block,u8* am_pm);
 /*
  * what happens when an number is pressed in typing mode
  */
-void Clock_Typing_Number(u8* pressed,u8* time_adjusted,u8* current_block,u8* hours,u8* minutes);
+void Clock_Typing_Number(u8* pressed,u8 time_adjusted,u8* current_block,u8* hours,u8* minutes);
 
 /*
  * what happens when exiting typing mode
  */
-void Clock_Typing_Exit(u8* time_adjusted,u8* current_block);
+void Clock_Typing_Exit(u8* current_block);
 /*
  * what happens when you enter typing mode
  */
