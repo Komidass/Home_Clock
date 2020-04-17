@@ -12,7 +12,8 @@
 #define minutes_frequency configTICK_RATE_HZ*60
 #define hours_frequency   configTICK_RATE_HZ*3600
 #define KPD_INT_double_press_frequency configTICK_RATE_HZ
-#define Debounce_frequency configTICK_RATE_HZ/4
+#define Debounce_frequency configTICK_RATE_HZ/3
+#define Beep_frequency configTICK_RATE_HZ/7
 
 #define seconds_position 14
 #define minutes_position 3
@@ -50,9 +51,9 @@
 #define stack_minutes 70
 #define stack_hours 70
 #define stack_kpd_typing_mode 85
-#define stack_alarm 60
+#define stack_alarm 85
 #define stack_kpd_int 85
-
+#define stack_beep	50
 /*
  * task priorities
  */
@@ -63,6 +64,7 @@
 #define priority_kpd_typing_mode 4
 #define priority_alarm 5
 #define priority_kpd_int 4
+#define priority_beep 5
 
 /*
  * what happens every second
@@ -110,9 +112,18 @@ void Clock_Typing_Exit(u8* current_block);
  */
 void Clock_Typing_Enter(u8* current_block);
 /*
- * what happens in the alarm
+ *	this task makes sounds with a normal buzzer using Atmega32's timer0's PWM
+ *	it reads a 128 Byte audio from the EEPROM whom address is passed when creating the task
+ *
+ *	each note read is 4 bits
+ *	the fourth controls the duty cycle where 0 corresponding to 31% Duty cycle and 1 to 98& Duty cycle
+ *	the first 3 bits control the prescalar of the pwm (the frequency) there are 5 frequencies available
+ *	each frequency is represented by it's number (e.g the lowest frequency corresponds to 5 and hight to 1)
+ *	F fastens the rythm
+ *	E slows the rythm
+ *
  */
-void Clock_Alarm(void);
+void Clock_Alarm(void* pvParameters);
 /*
  * what happens when you enter alarm setting mode
  */
@@ -139,7 +150,8 @@ void KPD_Button_INT_ISR(void *pvParameters);
  */
 void Clock_Semaphore_Init(void);
 /*
- *
+ * Beep once
  */
+void Clock_Beep(void *pvParameters);
 
 #endif /* CLOCK_H_ */

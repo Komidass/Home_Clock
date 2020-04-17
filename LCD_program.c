@@ -12,7 +12,7 @@
 #include "LCD_config.h"
 #define F_CPU 8000000
 #include "avr/delay.h"
-
+#include "avr/eeprom.h"
 static void LCD_Void_Write(u8 copy_u8_value) // the user wont use this func because only other functions will use it so the prototype will be in private.h
 //and to make this func visible only in this file not on the whole project we will put static in front of it
 {
@@ -64,8 +64,7 @@ void LCD_initialize(void)
 	_delay_us(50);
 	LCD_Void_Write_Cmd(0b00000001);
 	_delay_ms(2);
-	LCD_Void_Write_CGRAM(Pattern_Alarm,Pixel_Alarm);
-	LCD_Void_Write_CGRAM(Pattern_Arrow,Pixel_Arrow);
+	LCD_Load_CGRAM();
 }
 
 void LCD_Void_Write_String(u8* copy_string)
@@ -127,7 +126,7 @@ void LCD_Void_Write_Moving_String(u8* copy_string)
 	}
 }
 
-void LCD_Void_Write_CGRAM(const u8 copy_rows[8],u8 copy_CGRAM_address)
+void LCD_Void_Write_CGRAM(u8 copy_rows[8],u8 copy_CGRAM_address)
 {
 	LCD_Void_Write_Cmd(0x40 + copy_CGRAM_address*8);
 	for(int i=0;i<8;i++)
@@ -171,5 +170,15 @@ void LCD_Void_Write_Number_1(u8 Number)
 	LCD_Void_Write_Data(Number+'0');
 }
 
+void LCD_Load_CGRAM(void)
+{
+	u8 pattern[8];
 
+	for(int index = 0; index < NumberOfCustomChars ; index ++)
+	{
+		eeprom_read_block((void*) pattern, (const void*) (index*8), 8);
+		LCD_Void_Write_CGRAM(pattern,index);
+	}
+
+}
 

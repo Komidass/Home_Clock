@@ -17,9 +17,9 @@
 #include "Clock.h"
 #include "timers.h"
 #include "KBD_interface.h"
+#include "PWM_T0.h"
+#include "EEPROM.h"
 
-u8 count_once = 0;
-u8 count_twice = 0;
 u8 Seconds = 0;
 u8 Minutes = 0;
 u8 Hours = 0;
@@ -35,6 +35,7 @@ TaskHandle_t Hours_handle = NULL;
 TaskHandle_t Alarm_handle = NULL;
 TaskHandle_t KPD_handle = NULL;
 TaskHandle_t KPD_handle_INT = NULL;
+TaskHandle_t Beep_handle = NULL;
 TimerHandle_t KPD_INT_Timer;
 TimerHandle_t Debounce_Timer;
 
@@ -65,26 +66,13 @@ void Clock_Second(void *pvParameters)
 	u8 pin_value;
 	while(1)
 	{
+		//vTaskResume(Beep_handle);
 		if(xSemaphoreTake(LCD,10))
 		{
 			LCD_Set_Block(seconds_position);
 			LCD_Void_Write_Number_2(Seconds);
 			xSemaphoreGive(LCD);
 		}
-	/*	LCD_Set_Block(25);
-		LCD_Void_Write_Number_2(count_once);
-		LCD_Void_Write_Data(' ');
-		LCD_Void_Write_Number_2(count_twice);
-		LCD_Void_Write_Data(' ');
-		if(xTimerIsTimerActive(KPD_INT_Timer) == pdFALSE)
-		{
-			LCD_Void_Write_Data('0');
-		}
-		else
-		{
-			LCD_Void_Write_Data('1');
-		}
-*/
 
 		vTaskDelayUntil(&MyLastUnblockS,seconds_frequency);
 		Seconds++;
@@ -98,14 +86,14 @@ void Clock_Minute(void *pvParameters)
 	MyLastUnblockM = xTaskGetTickCount();
 	LCD_Set_Block(minutes_position-1);
 	LCD_Void_Write_Data(':');
+	u8 Audio_Address = Clock_Alarm_Ringtone;
 	while(1)
 	{
 		if(Get_Bit(flags,alarm_set) == 1)//alarm is set
 		{
 			if((Hours == Alarm_Hours)&&(Minutes == Alarm_Minutes)&&(AM_PM == Alarm_AM_PM))
 			{
-				xTaskCreate(Clock_Alarm,"Alarm",stack_alarm,NULL,priority_alarm,&Alarm_handle);
-
+				xTaskCreate(Clock_Alarm,"Alarm",stack_alarm,(void*)&Audio_Address,priority_alarm,&Alarm_handle);
 			}
 
 		}
@@ -351,9 +339,12 @@ void Clock_Print_Alarm_Interface(void)
 	else LCD_Void_Write_String("      ");
 }
 
-void Clock_Alarm(void)//what happens when there is an alarm
+void Clock_Alarm(void* pvParameters)//what happens when there is an alarm
 {
-
+	u8 Audio_Address = *(u8*)pvParameters;
+	u8 note = 0x0;
+	TickType_t freq;
+	u8 index = 0;
 	if(xSemaphoreTake(LCD,10))
 	{
 		Clock_Print_Alarm_Interface();
@@ -361,6 +352,20 @@ void Clock_Alarm(void)//what happens when there is an alarm
 	}
 	while(1)
 	{
+		note = Get_4_Bits(eeprom_read_byte((u8*) Audio_Address + index/2), index%2);
+				switch (note)
+				{
+			    default:
+					PWM_Set_Prescalar(note & 0x7);
+					PWM_Set_Duty(Get_Bit(note,3));
+					break;
+				case 0xF:
+					freq = Fast_Rythm;
+					break;
+				case 0xE:
+					freq = Slow_Rythm;
+					break;
+				}
 
 		Toggle_Bit(flags,alarm_text_toggle);
 		if(Get_Bit(flags,alarm_set) == 1)//if an alarm is set
@@ -369,6 +374,7 @@ void Clock_Alarm(void)//what happens when there is an alarm
 			{
 				Clock_Print_Alarm_Interface();
 			}
+
 		}
 		else
 		{
@@ -377,7 +383,9 @@ void Clock_Alarm(void)//what happens when there is an alarm
 			Clear_Bit(flags,alarm_latch);
 			vTaskDelete(Alarm_handle);
 		}
-		vTaskDelay(seconds_frequency);
+		vTaskDelay(freq);
+		index++;
+		index = index % (Buzzer_Audio_Size/4);
 	}
 }
 void Clock_Typing_Mode(void *pvParameters)
@@ -389,6 +397,7 @@ void Clock_Typing_Mode(void *pvParameters)
 		pressed = KBD_u8GetKeyPadState(keys);
 		if(pressed != 0xff)
 		{
+			vTaskResume(Beep_handle);
 			/* Set to the current block and clear the last cursor*/
 			LCD_Set_Block(current_block);
 			LCD_Void_Write_Data(' ');
@@ -444,8 +453,7 @@ void KPD_Button_INT(void)
 
 void SignlePress( TimerHandle_t xTimer )
 {
-	count_once++;
-	DIO_u8SetPinValue(C7,0);
+
 	if((Get_Bit(flags,KPD_flag) == 0)&&(Get_Bit(flags,KPD_alarm_flag) == 0))
 	{
 		Clock_Typing_Enter(&current_block);
@@ -471,12 +479,14 @@ void Clock_Semaphore_Init(void)
 	Debounce_Timer = xTimerCreate("timer2",Debounce_frequency,pdFALSE,(void *) 1,Debounce);
 	xTaskCreate(Clock_Typing_Mode,"KPD",stack_kpd_typing_mode,NULL,priority_kpd_typing_mode,&KPD_handle);
 	xTaskCreate(KPD_Button_INT_ISR,"KPD_ISR1",stack_kpd_int,NULL,priority_kpd_int,&KPD_handle_INT);
+	xTaskCreate(Clock_Beep,"Beep",stack_beep,NULL,priority_beep,&Beep_handle);
 	vTaskSuspend(KPD_handle);
+
 
 
 }
 
-void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
+void KPD_Button_INT_ISR(void *pvParameters)
 {
 
 
@@ -485,6 +495,7 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 		vTaskSuspend(NULL);//task suspend itself
 		if(xTimerIsTimerActive(Debounce_Timer) == pdFALSE)//for debounce effect
 		{
+			vTaskResume(Beep_handle);
 			xTimerReset(Debounce_Timer,10);
 			/*
 			 * single press , function is the timer function
@@ -498,9 +509,9 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 			 */
 			else
 			{
-				count_twice++;
+
 				xTimerStop(KPD_INT_Timer,10);
-				DIO_u8SetPinValue(C7,1);
+
 				/*
 				 * if an alarm is set double pressing will cancel/stop the current alarm that is set/firing
 				 */
@@ -510,6 +521,7 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 				}
 				else if((Get_Bit(flags,KPD_alarm_flag) == 0)&&(Get_Bit(flags,KPD_flag) == 0))
 				{
+					PWM_Stop();
 					Clock_Alarm_Enter();
 					vTaskResume(KPD_handle);
 					Toggle_Bit(flags,KPD_alarm_flag);
@@ -524,9 +536,17 @@ void KPD_Button_INT_ISR(void *pvParamKPD_INT_Timereters)
 
 			}
 		}
-
-
 	}
 }
-
+void Clock_Beep(void *pvParameters)
+{
+	while(1)
+	{
+		vTaskSuspend(NULL);
+		PWM_Set_Prescalar(2);
+		PWM_Set_Duty(0);
+		vTaskDelay(Beep_frequency);
+		PWM_Stop();
+	}
+}
 

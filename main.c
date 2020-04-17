@@ -23,15 +23,15 @@ int main(void)
 	LCD_initialize();
 	LCD_Void_Clear();
 	Clock_Print_Default_Interface();
-	KBD_u8Initialize(GROUP_B);
+	KBD_u8Initialize(GROUP_A);
 	Clock_Semaphore_Init();
 	voidSetCallBack(INT_0,KPD_Button_INT);
 	DIO_u8SetPinDirection(D2,DIO_u8_INPUT);
 	DIO_u8SetPinValue(D2,1);
-	DIO_u8SetPinDirection(C7,DIO_u8_OUTPUT);
 	Interrupt_Set_Level(INT_0,INTERRUPT_LEVEL_RISING_EDGE);
 	Interrupt_Initialize();
 	Interrupt_Enable(INT_0);
+	DIO_u8SetPinDirection(B3,DIO_u8_OUTPUT);
 	xTaskCreate(Clock_Second,"seconds",stack_seconds,NULL,2,NULL);
 
 	vTaskStartScheduler();

@@ -9,6 +9,7 @@ C_SRCS += \
 ../EXTI_program.c \
 ../KBD_program.c \
 ../LCD_program.c \
+../PWM_T0.c \
 ../croutine.c \
 ../event_groups.c \
 ../heap_1.c \
@@ -25,6 +26,7 @@ OBJS += \
 ./EXTI_program.o \
 ./KBD_program.o \
 ./LCD_program.o \
+./PWM_T0.o \
 ./croutine.o \
 ./event_groups.o \
 ./heap_1.o \
@@ -41,6 +43,7 @@ C_DEPS += \
 ./EXTI_program.d \
 ./KBD_program.d \
 ./LCD_program.d \
+./PWM_T0.d \
 ./croutine.d \
 ./event_groups.d \
 ./heap_1.d \
