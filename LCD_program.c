@@ -182,3 +182,21 @@ void LCD_Load_CGRAM(void)
 
 }
 
+LCD_Void_Write_Number_3(u16 Number)
+{
+	if ( Number < 10) // 1 digit
+	{
+		LCD_Void_Write_Data(Number + '0');
+	}
+	else if (Number <100) // 2 digits
+	{
+		LCD_Void_Write_Data((Number / 10 ) + '0');
+		LCD_Void_Write_Data(( Number % 10) + '0');
+	}
+	else // 3 digits
+	{
+		LCD_Void_Write_Data((Number / 100) + '0');
+		LCD_Void_Write_Data(((Number/10) % 10) + '0');
+		LCD_Void_Write_Data((Number % 10) + '0');
+	}
+}

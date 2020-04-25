@@ -10,16 +10,19 @@
 
 #define LCD_Custom_Char_Size 8
 #define Buzzer_Audio_Size 128
+#define Map_Size 10
+#define Maps_Number 64
 
 #define EEPROM_Pixel_Alarm__add 0
 #define EEPROM_Pixel_Arrow_add 8
 
-
 #define EEPROM_SpongeBob_add 240
 
-#define Clock_Alarm_Ringtone EEPROM_SpongeBob_add
-
-
+#define EEPROM_Map_Start_add 368
+#define EEPROM_Map_1_add 0
+void Map_Write(u8 Map[11],u8 Map_add);
+void Map_Read(u8 Number,u8 Map_add);
+void Maps_Burner(u8 Maps[Maps_Number][Map_Size+1]);
 
 /*
  u8 Pattern_Alarm[8] = {

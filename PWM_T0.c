@@ -26,7 +26,7 @@ void PWM_Set_Duty(u8 Duty)
 {
 	/*
 	 * 0 --> 80
-	 * 1 --> 240
+	 * 1 --> 254
 	 */
 
 	OCR0 = 80 + Duty*170;

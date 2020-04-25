@@ -37,6 +37,8 @@ void LCD_Void_Write_CGRAM(u8 copy_rows[8],u8 copy_CGRAM_address);
 void LCD_Void_Write_Number(u32 Number);
 void LCD_Void_Write_Number_2(u8 Number);
 void LCD_Void_Write_Number_1(u8 Number);
+LCD_Void_Write_Number_3(u16 Number);
+
 //load custom characters in the CGRAM
 void LCD_Load_CGRAM(void);
 #endif /* LCD_INTERFACE_H_ */
