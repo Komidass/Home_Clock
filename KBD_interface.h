@@ -22,10 +22,31 @@
 
 #define KBD_u8_CON_PULLDOWN		0
 #define KBD_u8_CON_PULLUP		1
+//embedded
+
+#define R1 B7
+#define R2 B6
+#define R3 B5
+#define R4 B4
+#define C1 B2
+#define C2 B1
+#define C3 B0
+#define C4 D1
+
+/*
+#define R1 A7
+#define R2 A6
+#define R3 A5
+#define R4 A4
+#define C1 A3
+#define C2 A2
+#define C3 A1
+#define C4 A0
+*/
 
 
 u8 KBD_u8GetKeyPadState(u8 Copy_Au8KeysState[KBD_u8_KEYS_NB]);
 void KBD_u8Initialize(u8 group_nb);
 u8 KBD_keys_map(u8* keys);
-
+void KBD_u8Initialize_2(void);
 #endif

@@ -125,6 +125,31 @@ u8 KBD_u8GetKeyPadState(u8* Copy_Au8KeysState/*[KBD_u8_KEYS_NB]*/)
 	#endif
 
 }
+void KBD_u8Initialize_2(void) //initialize keypad active col pull up with Row 4 to be the the 8th pin in the port and col 4 to the 1st pin
+	{
+
+	DIO_u8SetPinDirection(R1,0);
+	DIO_u8SetPinDirection(R2,0);
+	DIO_u8SetPinDirection(R3,0);
+	DIO_u8SetPinDirection(R4,0);
+	DIO_u8SetPinDirection(C1,1);
+	DIO_u8SetPinDirection(C2,1);
+	DIO_u8SetPinDirection(C3,1);
+	DIO_u8SetPinDirection(C4,1);
+	DIO_u8SetPinValue(R1,1);
+	DIO_u8SetPinValue(R2,1);
+	DIO_u8SetPinValue(R3,1);
+	DIO_u8SetPinValue(R4,1);
+	KBD_Au8RowsPins[0] = R1;
+	KBD_Au8RowsPins[1] = R2;
+	KBD_Au8RowsPins[2] = R3;
+	KBD_Au8RowsPins[3] = R4;
+	KBD_Au8ColsPins[0] = C1;
+	KBD_Au8ColsPins[1] = C2;
+	KBD_Au8ColsPins[2] = C3;
+	KBD_Au8ColsPins[3] = C4;
+
+	}
 void KBD_u8Initialize(u8 group_nb) //initialize keypad active col pull up with Row 4 to be the the 8th pin in the port and col 4 to the 1st pin
 	{
 		switch (group_nb)

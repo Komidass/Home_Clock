@@ -58,8 +58,8 @@ void Clock_Print_Default_Interface(void)
 	LCD_Set_Block(Alarm_Icon_Position);
 	if(Get_Bit(flags,alarm_set) == 1) LCD_Void_Write_Data(Pixel_Alarm);
 	else LCD_Void_Write_Data(' ');
-	LCD_Set_Block(seconds_position);
-	LCD_Void_Write_Number_2(Seconds);
+	/*LCD_Set_Block(seconds_position);
+	LCD_Void_Write_Number_2(Seconds);*/
 
 }
 
@@ -334,19 +334,19 @@ void Clock_Print_Alarm_Interface(u8 randNum,u8 randMap)
 	if(xSemaphoreTake(LCD,20))
 	{
 		LCD_Void_Clear();
-		LCD_Set_Block(0);
+		LCD_Set_Block(Map_Text_Position);
 		LCD_Void_Write_String("Map:");
 		LCD_Void_Write_Number_2(randMap + 1);
-		LCD_Set_Block(7);
+		LCD_Set_Block(Random_Number_1_Position);
 		Map_Read(randNum,randMap);
-		LCD_Set_Block(16);
+		LCD_Set_Block(second_row_start);
 	}
 }
 
 void Clock_Alarm(void* pvParameters)//what happens when there is an alarm
 {
 
-	//vTaskResume(Ring_handle);
+	vTaskResume(Ring_handle);
 
 	u8 pressed  = 0xff;
 	u8 keys[16];
@@ -375,7 +375,7 @@ void Clock_Alarm(void* pvParameters)//what happens when there is an alarm
 		pressed = KBD_u8GetKeyPadState(keys);
 		if(Get_Bit(flags,alarm_set) == 1)//if an alarm is set
 		{
-			if((pressed >= 0x30)&&(pressed <= 0x39)) //if pressed is a number
+			if((pressed >= '0')&&(pressed <= '9')) //if pressed is a number
 			{
 				answer = (pressed - '0') + answer*10;
 				LCD_Set_Block(16+count_input);
@@ -389,15 +389,16 @@ void Clock_Alarm(void* pvParameters)//what happens when there is an alarm
 				{
 					Clear_Bit(flags,alarm_set);
 					LCD_Void_Clear();
-					LCD_Set_Block(3);
+					LCD_Set_Block(first_row_start);
+					LCD_Void_Write_String("Good Morning! ");
+					LCD_Void_Write_Data(Pixel_Mug);
 					vTaskSuspend(Ring_handle);
-					LCD_Void_Write_String("Good Morning!");
 				}
 				else
 				{
 					Set_Bit(flags,new_random);
 					LCD_Void_Clear();
-					LCD_Set_Block(3);
+					LCD_Set_Block(first_row_start);
 					LCD_Void_Write_String("Wrong Answer");
 				}
 				xTimerReset(LCD_Alert_Timer,10);
@@ -526,7 +527,7 @@ void KPD_Button_INT_ISR(void *pvParameters)
 		/*
 		 * if an alarm is firing pressing the button won't do anything
 		 */
-		//if((Alarm_handle != NULL)&&(Get_Bit(flags,alarm_set) !=0)) continue;
+		if((Alarm_handle != NULL)&&(Get_Bit(flags,alarm_set) !=0)) continue;
 		if(xTimerIsTimerActive(Debounce_Timer) == pdFALSE)//for debounce effect
 		{
 			vTaskResume(Beep_handle);
@@ -570,8 +571,8 @@ void Clock_Beep(void *pvParameters)
 	while(1)
 	{
 		vTaskSuspend(NULL);
-		PWM_Set_Prescalar(2);
-		PWM_Set_Duty(0);
+		PWM_Set_Prescalar(1);
+		PWM_Set_Duty(1);
 		vTaskDelay(Beep_frequency);
 		PWM_Set_Prescalar(0);
 	}

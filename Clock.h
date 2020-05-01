@@ -11,10 +11,11 @@
 #define seconds_frequency configTICK_RATE_HZ
 #define minutes_frequency configTICK_RATE_HZ*60
 #define hours_frequency   configTICK_RATE_HZ*3600
-#define KPD_INT_double_press_frequency configTICK_RATE_HZ
+#define KPD_INT_double_press_frequency configTICK_RATE_HZ/2
 #define Debounce_frequency configTICK_RATE_HZ/3
 #define Beep_frequency configTICK_RATE_HZ/7
 #define LCD_Alert_frequency configTICK_RATE_HZ*3
+#define KPD_Check_frequency configTICK_RATE_HZ/4
 
 #define seconds_position 14
 #define minutes_position 3
@@ -22,10 +23,12 @@
 #define Am_PM_position 6
 #define Set_Alarm_Position 23
 #define Alarm_Icon_Position 9
-#define Alarm_Text_Position 21
-
+#define Map_Text_Position 0
+#define Random_Number_1_Position 7
+#define Random_Number_2_Position 11
 #define second_row_start 16
-#define KPD_Check_frequency configTICK_RATE_HZ/3
+#define first_row_start 0
+
 
 #define minimum_cursor_range 16
 #define maximum_cursor_range 23
@@ -51,9 +54,9 @@
 #define stack_seconds 60
 #define stack_minutes 70
 #define stack_hours 70
-#define stack_kpd_typing_mode 85
+#define stack_kpd_typing_mode 70
 #define stack_alarm 50
-#define stack_kpd_int 85
+#define stack_kpd_int 80
 #define stack_beep	50
 #define stack_ring	50
 /*
@@ -72,6 +75,11 @@
 
 
 /*
+ * Create tasks and timers
+ */
+void Clock_Semaphore_Init(void);
+
+/*
  * what happens every second
  */
 void Clock_Second(void *pvParameters);
@@ -83,12 +91,23 @@ void Clock_Minute(void *pvParameters);
  * what happens every hour
  */
 void Clock_Hours(void *pvParameters);
-/*
- *
- */
+
+
+
 void Clock_Typing_Mode(void *pvParameters);
 /*
  * the default interface of the clock
+ */
+ /*
+ * what happens when exiting typing mode
+ */
+void Clock_Typing_Exit(void);
+/*
+ * what happens when you enter typing mode
+ */
+void Clock_Typing_Enter(void);
+/*
+ * Print Default interface
  */
 void Clock_Print_Default_Interface(void);
 /*
@@ -108,26 +127,8 @@ void Clock_Typing_Up_Arrow(u8* am_pm);
  */
 void Clock_Typing_Number(u8* pressed,u8 time_adjusted,u8* hours,u8* minutes);
 
-/*
- * what happens when exiting typing mode
- */
-void Clock_Typing_Exit(void);
-/*
- * what happens when you enter typing mode
- */
-void Clock_Typing_Enter(void);
-/*
- * what happens when is alarm is fired
- */
-void Clock_Alarm(void* pvParameters);
-/*
- * what happens when you enter alarm setting mode
- */
-void Clock_Alarm_Enter(void);
-/*
- * what happens when you exit alarm setting mode
- */
-void Clock_Alarm_Exit(void);
+
+
 
 /*
  * what happens when the KPD button interrupt happens (which starts scanning for KPD input)
@@ -141,7 +142,23 @@ void KPD_Button_INT_ISR(void *pvParameters);
 /*
  * create semaphores
  */
-void Clock_Semaphore_Init(void);
+
+
+
+
+
+/*
+ * what happens when is alarm is fired
+ */
+void Clock_Alarm(void* pvParameters);
+/*
+ * what happens when you enter alarm setting mode
+ */
+void Clock_Alarm_Enter(void);
+/*
+ * what happens when you exit alarm setting mode
+ */
+void Clock_Alarm_Exit(void);
 /*
  * Beep once
  */
@@ -159,6 +176,8 @@ void Clock_Beep(void *pvParameters);
  *
  */
 void Clock_Ring(void *pvParameters);
-
-
+/*
+ * Print the Alarm interface
+ */
+void Clock_Print_Alarm_Interface(u8 randNum,u8 randMap);
 #endif /* CLOCK_H_ */
